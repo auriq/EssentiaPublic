@@ -22,6 +22,14 @@ trap f ERR
 # It also looks for your pem file, which was also pushed to the jobs directory.
 # Copy both to your current working directory.
 ess instance ec2 create --number=2
+## ess instance ec2 existing # run if you alreayd created the worker instances
+
+ess datastore select s3://asi-public/diy_woodworking --credentials=/home/ec2-user/jobs/asi-public.csv
+ess datastore scan
+ess datastore rule add "*purchase*gz" purchase "YYYYMMDD"
+ess datastore probe purchase --apply
+ess datastore category change purchase dateFormat "Y.m.d.H.M.S"
+ess datastore category change purchase TZ GMT
 
 # We can run a simple unix task on a set of files with the following:
 ess task stream purchase 2014-09-01 2014-09-30 "wc -l"
@@ -37,11 +45,10 @@ ess spec create vector usertotals s,hash:userID f,+add:total
 ess spec commit
 ess udbd start
 
-ess datastore select s3://asi-public/diy_woodworking --credentials=~/.aws/credentials.csv
-
-
 ess task stream purchase 2014-09-01 2014-09-30 "TZ=%tz aq_pp -notitle -f,eok - -d %cols -evlc i:source 1 -evlc i:one 1 -ddef -udb_imp udb_weekly:CJ"
 ess task exec "aq_udb -exp udb_weekly:Profile > profile.csv; aq_udb -cnt udb_weekly:Profile; wc -l profile.csv" --master
-ess task exec "aq_udb -exp udb_weekly:Profile -local | gzip -3" --s3out=s3://*OutputBucket*/results/profile_%node_id_of_%num_nodes.csv
-# Make sure to change the output bucket to whichever bucket you want the files to be stored in.
+
+## run to output to an S3 bucket:  
+# ess task exec "aq_udb -exp udb_weekly:Profile -local | gzip -3" --s3out=s3://*OutputBucket*/results/profile_%node_id_of_%num_nodes.csv
+## Make sure to change the output bucket to whichever bucket you want the files to be stored in.
 

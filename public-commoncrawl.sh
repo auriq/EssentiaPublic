@@ -1,5 +1,5 @@
 ess instance local
-ess datastore select s3://aws-publicdatasets/common-crawl/crawl-data/CC-MAIN-2013-20/ --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
+ess datastore select s3://aws-publicdatasets/common-crawl/crawl-data/CC-MAIN-2013-20/ --credentials=/home/ec2-user/jobs/asi-public.csv
 ess datastore scan
 ess datastore summary
 ess datastore ls "*" | wc -l
