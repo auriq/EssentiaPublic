@@ -1,4 +1,6 @@
 #!/bin/bash
+# wiki simply uses more memory than a t1.micro has. To run wikiscript use a larger instance.
+
 f () {
     command=`echo $BASH_COMMAND | cut -c1-60 | sed 's/$/ .../g'`
     echo "error on line ${BASH_LINENO[0]} : $command"
