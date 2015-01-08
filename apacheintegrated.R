@@ -1,0 +1,271 @@
+#file <- "analyze-apache-weblogdata.sh"
+#file <- "processyourdata.sh"
+file <- "rintapache.sh"
+#rscriptfile <- "**YourScript**.R"
+
+commandcount <- 0
+lines <- readLines(file)
+for (line in lines) {
+    print(line)
+    if ((substr(line, 1, 13) == "ess task exec") && (substr(line, nchar(line) - 7, nchar(line)) != "#Rignore")) {
+       #commandcount <- commandcount + 1
+       t1 <- pipe(line,open="r")
+       t2 <- read.csv(t1,header=TRUE,sep=",",quote="\"'",comment.char = "#",blank.lines.skip=FALSE,allowEscapes=TRUE)
+       assign(sprintf("command%i",commandcount), t2[1:(which(t2[,1] == 'RSTOPHERE')[[1]] - 1),])
+       print(get(sprintf("command%i",commandcount)))
+       remove(t1)
+       remove(t2)
+    }
+    else {
+       if (line != "") {
+          system(line)
+       }
+    }
+    if (substr(line, 1, 8) == "ess task") {
+       commandcount <- commandcount + 1
+    }
+}
+#print("THE FOLLOWING IS COMMAND 1")
+#print(command1)
+#print(rscriptfile)
+
+
+
+# WARNING: Hardcoded some of the information in here. In particular, the commands' bandwidth 
+# conversion must be entered for each command and the reordering in Visit Duration and Days of the Week is 
+# explicitly set. Could also optimally set the command names in the beginning instead of resetting them later.
+
+### Installing and Using Packages
+#install.packages("Hmisc")
+#library(Hmisc)
+
+#install.packages("gdata")
+library(gdata)
+
+##install.packages("xlsx")
+##install.packages("rJava")
+##library(rJava)
+##library(xlsx)
+
+# Loading
+#for (i in c(2,3,4,5,6,7,8,9,10,11,12,13,15,17,18,20,22)) {
+#  assign(sprintf("command%i",i), read.csv(sprintf('C:/Users/bwaxer/Documents/output-apache/command%i.csv',i), header = TRUE, sep = ","))
+#}
+
+### MONTHSUMMARY TABLE (BOTH VIEWED AND NON-VIEWED)
+uniquevisitors <- data.frame(monthsummary = I(c(1)), uniques = c(command2[,2][[2]]))
+monthsummary <- merge(merge(uniquevisitors,command17,by="monthsummary"),command3,by="monthsummary")
+command22["uniques"] <- NA
+command22["visitcount"] <- NA
+monthsummary <- rbind(monthsummary,command22)
+monthsummary[,1] <- "CurrentMonth"
+print(monthsummary)
+
+### OS COUNTS AND PERCENTAGES
+OScounts <- command10
+OScounts[,1] <- sub(".*java.*","Java",OScounts[,1])
+OScounts[,1] <- sub(".*win.*","Windows",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub(".*mac.*","Macintosh",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub(".*iphone.*","iOS",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub(".*iOS.*","iOS",ignore.case=FALSE,OScounts[,1])
+OScounts[,1] <- sub(".*ipad.*","iOS",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub(".*android.*","Android",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub(".*linux.*","Linux",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub(".*unix.*","Other Unix System",ignore.case=TRUE,OScounts[,1])
+OScounts[,1] <- sub("^$","Unknown",ignore.case=FALSE,fixed=FALSE,OScounts[,1])
+OScounts[,1][(OScounts[,1]!="Java")&(OScounts[,1]!="Windows")&(OScounts[,1]!="Macintosh")&(OScounts[,1]!="iOS")&(OScounts[,1]!="Android")&(OScounts[,1]!="Linux")&(OScounts[,1]!="Other Unix System")&(OScounts[,1]!="Unknown")] <- "Other"
+OScounts <- aggregate(OScounts[,2-3],by=list(OScounts[,1]),FUN=sum)
+OScounts[,4] <- OScounts[,3] 
+OScounts[,3] <- paste(prop.table(OScounts[,2])*100, "%", sep="")
+OScounts[,5] <- paste(prop.table(OScounts[,4])*100, "%", sep="")
+names(OScounts) <- c("OS","Pages","Percent","Hits","Percent")
+print(OScounts)
+
+### BROWSER COUNTS AND PERCENTAGES
+Bcounts <- command11
+Bcounts[,1] <- sub(".*chrome.*","Chrome",Bcounts[,1])
+Bcounts[,1] <- sub(".*msie.*","Internet_Explorer",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub(".*internet explorer.*","Internet_Explorer",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub(".*firefox.*","Firefox",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub(".*opera.*","Opera",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub(".*safari.*","Safari",ignore.case=FALSE,Bcounts[,1])
+Bcounts[,1] <- sub(".*mozilla.*","Mozilla",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub(".*android.*","Android",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub(".*netscape.*","Netscape",ignore.case=TRUE,Bcounts[,1])
+Bcounts[,1] <- sub("^$","Unknown",ignore.case=FALSE,fixed=FALSE,Bcounts[,1])
+Bcounts[,1][(Bcounts[,1]!="Mozilla")&(Bcounts[,1]!="Chrome")&(Bcounts[,1]!="Internet_Explorer")&(Bcounts[,1]!="Firefox")&(Bcounts[,1]!="Android")&(Bcounts[,1]!="Opera")&(Bcounts[,1]!="Safari")&(Bcounts[,1]!="Unknown")&(Bcounts[,1]!="Netscape")] <- "Other"
+Bcounts <- aggregate(Bcounts[,2-3],by=list(Bcounts[,1]),FUN=sum)
+Bcounts[,4] <- Bcounts[,3] 
+Bcounts[,3] <- paste(prop.table(Bcounts[,2])*100, "%", sep="")
+Bcounts[,5] <- paste(prop.table(Bcounts[,4])*100, "%", sep="")
+names(Bcounts) <- c("Browser","Pages","Percent","Hits","Percent")
+print(Bcounts)
+
+### SEARCH KEY PHRASES COUNT AND PERCENT
+SearchKeys <- command12 
+SearchKeys[,1] <- sub("^$","NoSearchEngine",ignore.case=FALSE,fixed=FALSE,SearchKeys[,1])
+SearchKeys[,1] <- sub("^-$","NoKey",ignore.case=FALSE,fixed=FALSE,SearchKeys[,1])
+SearchKeys[,3] <- paste(prop.table(SearchKeys[,2])*100, "%", sep="")
+names(SearchKeys) <- c("SearchKeys","Search","Percent")
+print(SearchKeys)
+
+### Bad HTTP Status Codes COUNTS AND PERCENTS
+BadStatus <- command20
+BadStatus[,5] <- BadStatus[,4] 
+BadStatus[,6] <- BadStatus[,4]
+BadStatus[,4] <- BadStatus[,3]
+BadStatus[,3] <- paste(prop.table(BadStatus[,2])*100, "%", sep="")
+BadStatus[,5] <- paste(prop.table(BadStatus[,4])*100, "%", sep="")
+names(BadStatus) <- c("HTTP_Status_Code","Pages","Percent","Hits","Percent","Bandwidth")
+print(BadStatus)
+
+### Visit Duration Counts and Percents
+Duration <- command18
+Duration <- Duration[c(4,3,6,7,2,1,5),]
+Duration[,3] <- paste(prop.table(Duration[,2])*100, "%", sep="")
+names(Duration) <- c("Visit_Duration","Visit_Count","Percent")
+print(Duration)
+
+### Days of Month Visits and Counts
+DayCounts <- command5[order(command5[,1]),]
+DayVisits <- command15[order(command15[,1]),]
+DaysofMonth <- merge(command15, command5, by="day")
+print(DaysofMonth)
+
+### Days of Week Visits and Counts
+DaysofWeek <- command6[c(1,2,3,7,5,4,6),]
+print(DaysofWeek)
+
+### Hours Visits and Counts
+Hours <- command7[order(command7[,1]),]
+print(Hours)
+
+### Graphing Each Count by Percent of Max Value
+msgraph <- monthsummary[1,]
+msgraph[,2] <- msgraph[,2]*100/max(msgraph[,2])
+msgraph[,3] <- msgraph[,3]*100/max(msgraph[,3])
+msgraph[,4] <- msgraph[,4]*100/max(msgraph[,4])
+msgraph[,5] <- msgraph[,5]*100/max(msgraph[,5])
+msgraph[,6] <- msgraph[,6]*100/max(msgraph[,6])
+
+domgraph <- DaysofMonth
+domgraph[,2] <- domgraph[,2]*100/max(domgraph[,2])
+domgraph[,3] <- domgraph[,3]*100/max(domgraph[,3])
+domgraph[,4] <- domgraph[,4]*100/max(domgraph[,4])
+domgraph[,5] <- domgraph[,5]*100/max(domgraph[,5])
+
+dowgraph <- DaysofWeek
+dowgraph[,2] <- dowgraph[,2]*100/max(dowgraph[,2])
+dowgraph[,3] <- dowgraph[,3]*100/max(dowgraph[,3])
+dowgraph[,4] <- dowgraph[,4]*100/max(dowgraph[,4])
+
+hourgraph <- Hours
+hourgraph[,2] <- hourgraph[,2]*100/max(hourgraph[,2])
+hourgraph[,3] <- hourgraph[,3]*100/max(hourgraph[,3])
+hourgraph[,4] <- hourgraph[,4]*100/max(hourgraph[,4])
+
+countrygraph <- command8
+countrygraph[,2] <- countrygraph[,2]*100/max(countrygraph[,2])
+countrygraph[,3] <- countrygraph[,3]*100/max(countrygraph[,3])
+countrygraph[,4] <- countrygraph[,4]*100/max(countrygraph[,4])
+cgraph <- data.frame(Country = countrygraph[,1][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1], Pages = countrygraph[,2][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1], Hits = countrygraph[,3][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1], Pagebytes = countrygraph[,4][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1])
+
+
+pagegraph <- command13
+pagegraph[,2] <- pagegraph[,2]*100/max(pagegraph[,2])
+pagegraph[,3] <- pagegraph[,3]*100/max(pagegraph[,3])
+pgraph <- data.frame(PageURL = pagegraph[,1][pagegraph[,2]>=1|pagegraph[,3]>=1], Pagecount = pagegraph[,2][pagegraph[,2]>=1|pagegraph[,3]>=1], Pagebytes = pagegraph[,3][pagegraph[,2]>=1|pagegraph[,3]>=1])
+
+
+#barplot(t(as.matrix(msgraph[,2:6])), names.arg=msgraph[,1], col=c("black","blue","red","gray","green","orange"), beside=TRUE, main="DaysofMonth: Visits, Pages, and Hits",xlab="DayofMonth",ylab="Proportion of Counts",axes=FALSE,las=2)
+par(mar=c(5, 12.5, 6, 4) + 0.1)
+barplot(t(as.matrix(domgraph[,2:5])), names.arg=domgraph[,1], col=c("black","blue","red","gray"), beside=TRUE, main="DaysofMonth: Visits, Pages, Hits, and Bandwidth",xlab="DayofMonth",axes=FALSE,las=2) #,ylab="Proportion of Counts"
+Axis(side=2, at=seq(0,max(domgraph[,2]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,2]),length.out = 11)),line=.5)
+mtext(2,text="Percent Of Max Visits",line=2.5)
+Axis(side=2,at=seq(0,max(domgraph[,3]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,3]),length.out = 11)),line=3.5)
+mtext(2,text="Percent Of Max Pages",line=5.5)
+Axis(side=2, at=seq(0,max(domgraph[,4]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,4]),length.out = 11)),line=6.5)
+mtext(2,text="Percent Of Max Hits",line=8.5)
+Axis(side=2, at=seq(0,max(domgraph[,5]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,5]),length.out = 11)),line=9.5)
+mtext(2,text="Percent Of Max Bandwidth",line=11.5)
+legend("topright",inset=c(0,-.15),legend=c("% of Max Visits","% Of Max Pages","% Of Max Hits","% Of Max Bandwidth"),fill=c("black","blue","red","gray"),bty="n")
+
+
+par(mar=c(5, 9.5, 6, 4) + 0.1)
+barplot(t(as.matrix(dowgraph[,2:4])), names.arg=dowgraph[,1], col=c("black","blue","red"), beside=TRUE, main="DaysofWeek: Pages, Hits, and Bandwidth",xlab="DayofWeek",axes=FALSE,las=2) #,ylab="Proportion of Counts"
+Axis(side=2, at=seq(0,max(dowgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(DaysofWeek[,2]),length.out = 10)),line=.5)
+mtext(2,text="Percent Of Max Pages",line=2.5)
+Axis(side=2,at=seq(0,max(dowgraph[,3]),length.out = 10),lwd=2,labels=round(seq(0,max(DaysofWeek[,3]),length.out = 10)),line=3.5)
+mtext(2,text="Percent Of Max Hits",line=5.5)
+Axis(side=2, at=seq(0,max(dowgraph[,4]),length.out = 10),lwd=2,labels=round(seq(0,max(DaysofWeek[,4]),length.out = 10)),line=6.5)
+mtext(2,text="Percent Of Max Bandwidth",line=8.5)
+legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Hits","% of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
+
+par(mar=c(5, 9.5, 6, 4) + 0.1)
+barplot(t(as.matrix(hourgraph[,2:4])), names.arg=hourgraph[,1], col=c("black","blue","red"), beside=TRUE, main="Hours: Pages, Hits, and Bandwidth",xlab="Hour",axes=FALSE,las=2) #,ylab="Proportion of Counts"
+Axis(side=2, at=seq(0,max(hourgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(Hours[,2]),length.out = 10)),line=.5)
+mtext(2,text="Percent Of Max Pages",line=2.5)
+Axis(side=2,at=seq(0,max(hourgraph[,3]),length.out = 10),lwd=2,labels=round(seq(0,max(Hours[,3]),length.out = 10)),line=3.5)
+mtext(2,text="Percent Of Max Hits",line=5.5)
+Axis(side=2, at=seq(0,max(hourgraph[,4]),length.out = 10),lwd=2,labels=round(seq(0,max(Hours[,4]),length.out = 10)),line=6.5)
+mtext(2,text="Percent Of Max Bandwidth",line=8.5)
+legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Hits","% of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
+
+
+par(mar=c(5, 9.5, 6, 4) + 0.1)
+barplot(t(as.matrix(cgraph[,2:4])), names.arg=cgraph[,1], col=c("black","blue","red"), beside=TRUE, main="Country: Pages, Hits, and Bandwidth",xlab="Country",axes=FALSE,las=2) #,ylab="Proportion of Counts"
+Axis(side=2, at=seq(0,max(cgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(command8[,2]),length.out = 10)),line=.5)
+mtext(2,text="Percent Of Max Pages",line=2.5)
+Axis(side=2,at=seq(0,max(cgraph[,3]),length.out = 10),lwd=2,labels=round(seq(0,max(command8[,3]),length.out = 10)),line=3.5)
+mtext(2,text="Percent Of Max Hits",line=5.5)
+Axis(side=2, at=seq(0,max(cgraph[,4]),length.out = 10),lwd=2,labels=round(seq(0,max(command8[,4]),length.out = 10)),line=6.5)
+mtext(2,text="Percent Of Max Bandwidth",line=8.5)
+legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Hits","% of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
+
+
+par(mar=c(7.5, 12.5, 6, 4) + 0.1)
+barplot(t(as.matrix(pgraph[,2:3])), names.arg=pgraph[,1], col=c("black","red"), beside=TRUE, main="PageURL: Pages and Bandwidth",axes=FALSE,las=2,cex.names=1,horiz=TRUE) #,ylab="Proportion of Counts"
+Axis(side=1, at=seq(0,max(pgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(command13[,2]),length.out = 10)),line=.5)
+mtext(1,text="Percent Of Max Pages",line=2.5)
+Axis(side=1,at=seq(0,max(pgraph[,3]),length.out = 10),lwd=2,labels=round(seq(0,max(command13[,3]),length.out = 10)),line=3.5)
+mtext(1,text="Percent Of Max Bandwidth",line=5.5)
+legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Bandwidth"),fill=c("black","red"),bty="n")
+
+
+## remember that this is proportion so a miniscule bar can still be a high number that is just much lower than an outlier on the same graph.
+print(pgraph[,1])
+
+for (df in list(monthsummary,OScounts,Bcounts,SearchKeys,BadStatus,Duration,DaysofMonth,DaysofWeek,Hours,command4,command8,command9,command13)) {
+  print(summary(df[,2:ncol(df)]))
+  print(sapply(df[,2:ncol(df)], sd))
+  #print(sapply(df, var, na.rm=FALSE))
+  print("-----------------")
+}
+
+### Make Pagebytes Readable...Turn into Bandwidth
+
+monthsummary[,"pagebytes"] <- humanReadable(monthsummary[,"pagebytes"],digits=2,width=NULL)
+command4[,"pagebytes"] <- humanReadable(command4[,"pagebytes"],digits=2,width=NULL)
+DaysofMonth[,"pagebytes"] <- humanReadable(DaysofMonth[,"pagebytes"],digits=2,width=NULL)
+DaysofWeek[,"pagebytes"] <- humanReadable(DaysofWeek[,"pagebytes"],digits=2,width=NULL)
+Hours[,"pagebytes"] <- humanReadable(Hours[,"pagebytes"],digits=2,width=NULL)
+command8[,"pagebytes"] <- humanReadable(command8[,"pagebytes"],digits=2,width=NULL)
+command9[,"pagebytes"] <- humanReadable(command9[,"pagebytes"],digits=2,width=NULL)
+BadStatus[,"Bandwidth"] <- humanReadable(BadStatus[,"Bandwidth"],digits=2,width=NULL)
+
+#command22[,"pagebytes"] <- humanReadable(command22[,"pagebytes"],digits=2,width=NULL)
+
+
+# write.csv(monthsummary, file = "C:/Users/bwaxer/Documents/output-apache/postr/monthsummary.csv",row.names=FALSE)
+# write.csv(OScounts, file = "C:/Users/bwaxer/Documents/output-apache/postr/OScounts.csv",row.names=FALSE)
+# write.csv(Bcounts, file = "C:/Users/bwaxer/Documents/output-apache/postr/Bcountsy.csv",row.names=FALSE)
+# write.csv(SearchKeys, file = "C:/Users/bwaxer/Documents/output-apache/postr/SearchKeys.csv",row.names=FALSE)
+# write.csv(BadStatus, file = "C:/Users/bwaxer/Documents/output-apache/postr/BadStatus.csv",row.names=FALSE)
+# write.csv(Duration, file = "C:/Users/bwaxer/Documents/output-apache/postr/Duration.csv",row.names=FALSE)
+# write.csv(DaysofMonth, file = "C:/Users/bwaxer/Documents/output-apache/postr/DaysofMonth.csv",row.names=FALSE)
+# write.csv(DaysofWeek, file = "C:/Users/bwaxer/Documents/output-apache/postr/DaysofWeek.csv",row.names=FALSE)
+# write.csv(Hours, file = "C:/Users/bwaxer/Documents/output-apache/postr/Hours.csv",row.names=FALSE)
+# write.csv(command4, file = "C:/Users/bwaxer/Documents/output-apache/postr/Hosts.csv",row.names=FALSE)
+# write.csv(command8, file = "C:/Users/bwaxer/Documents/output-apache/postr/Country.csv",row.names=FALSE)
+# write.csv(command9, file = "C:/Users/bwaxer/Documents/output-apache/postr/AuthenticatedUsers.csv",row.names=FALSE)
+# write.csv(command13, file = "C:/Users/bwaxer/Documents/output-apache/postr/Pages.csv",row.names=FALSE)
