@@ -1,7 +1,9 @@
-#file <- "analyze-apache-weblogdata.sh"
-#file <- "processyourdata.sh"
-file <- "calculatesumandmaximum.sh"
-rscriptfile <- "**YourScript**.R"
+#file <- "**Your_Essentia_Script**.sh"
+#rscriptfile <- "**Your_R_Script**.R"
+
+## For Apache Analysis Demonstration
+file <- "rintapache.sh"
+rscriptfile <- "rintapache.R"
 
 commandcount <- 0
 lines <- readLines(file)
@@ -12,14 +14,15 @@ for (line in lines) {
        t1 <- pipe(line,open="r")
        t2 <- read.csv(t1,header=TRUE,sep=",",quote="\"'",comment.char = "#",blank.lines.skip=FALSE,allowEscapes=TRUE)
        assign(sprintf("command%i",commandcount), t2[1:(which(t2[,1] == 'RSTOPHERE')[[1]] - 1),])
-       print(get(sprintf("command%i",commandcount)))
+       #print(get(sprintf("command%i",commandcount)))
        remove(t1)
        remove(t2)
     }
     else {
-       system(line)
+       if (line != "") {
+          system(line)
+       }
     }
 }
-#print("THE FOLLOWING IS COMMAND 1")
-#print(command1)
-print(rscriptfile)
+
+source(rscriptfile, echo=TRUE)
