@@ -12,17 +12,19 @@ trap f ERR
 # we encourage you to spin up 2 low cost worker nodes (t1.micros) to
 # get a better sense of how Essentia works.
 
-# For master node only, uncomment the following and comment out the
+# For single node only, uncomment the following and comment out the
 # multinode setup
-#ess instance local
+ess instance local
 
 # To spin up worker nodes, essentia looks for a file called ec2.conf in your
 # current working directory.  This file is created by the Essentia UI
 # and pushed to the ~/jobs directory.
 # It also looks for your pem file, which was also pushed to the jobs directory.
 # Copy both to your current working directory.
-ess instance ec2 create --number=2
-## ess instance ec2 existing # run if you alreayd created the worker instances
+# To use multiple nodes, uncomment the following and comment out the
+# singlenode setup
+# ess instance ec2 create --number=2
+## ess instance ec2 existing # run if you already created the worker instances
 
 ess datastore select s3://asi-public/diy_woodworking --credentials=/home/ec2-user/jobs/asi-public.csv
 ess datastore scan
@@ -46,9 +48,12 @@ ess spec commit
 ess udbd start
 
 ess task stream purchase 2014-09-01 2014-09-30 "TZ=%tz aq_pp -notitle -f,eok - -d %cols -evlc i:source 1 -evlc i:one 1 -ddef -udb_imp udb_weekly:CJ"
-ess task exec "aq_udb -exp udb_weekly:Profile > profile.csv; aq_udb -cnt udb_weekly:Profile; wc -l profile.csv" --master
+ess task exec "aq_udb -exp udb_weekly:Profile > profile.csv; aq_udb -cnt udb_weekly:Profile; wc -l profile.csv" ## --master # this master flag is
+# only needed if you are using a multi-node setup.
 
 ## run to output to an S3 bucket:  
 # ess task exec "aq_udb -exp udb_weekly:Profile -local | gzip -3" --s3out=s3://*OutputBucket*/results/profile_%node_id_of_%num_nodes.csv
 ## Make sure to change the output bucket to whichever bucket you want the files to be stored in.
+## You can only run this command successfully if you have an AWS account and access keys to the bucket you want to output data to. 
+## For the necessary information to create an AWS account and obtain access keys, go to http://www.auriq.net/getting-started/ 
 

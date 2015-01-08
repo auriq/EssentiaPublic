@@ -7,7 +7,7 @@ f () {
 trap f ERR
 
 
-# This is a test script that demonstrates how to scan and organize an S3 bucket containing log data.
+# This is a test script that demonstrates how to scan and organize a directory containing log data.
 # In this demo, we provide logs from a fictional DIY woodworking website.
 # The website contains instructions for building a variety of items, and each article (web page) can refer
 # to other plans on the site.  Full PDF documents with additional information are available for purchase for each article.
@@ -28,13 +28,13 @@ trap f ERR
 # might have different prices depending.  The referrerID is the last article the user read before purchasing
 # the plans in the current article.
 
-# setup local instance and select our test bucket
+# setup local instance and select our sample data directory
 ess instance local
 ess datastore select s3://asi-public/diy_woodworking --credentials=/home/ec2-user/jobs/asi-public.csv
 
 # get a list of the files and generate the index.
-# It will spit out a message indicating that no index file was found on the bucket.  This is normal
-# for first time use.  After you build your ruleset, you can push the index back to the S3 bucket for
+# It will spit out a message indicating that no index file was found in the directory.  This is normal
+# for first time use.  After you build your ruleset, you can push the index to the directory for
 # use in future analysis runs
 ess datastore scan  
 
