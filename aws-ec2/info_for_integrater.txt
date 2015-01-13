@@ -1,0 +1,45 @@
+# It is a good idea to have port 8787 open when using the R integrater and this is necessary when using an AWS instance.
+
+First you need to install R and Rstudio-server on your machine.
+The Command to do this are, for a linux-based system such as the one provided in Essentia's ami:
+
+sudo yum update
+sudo yum install R
+sudo yum install openssl098e # Required only for RedHat/CentOS 6 and 7
+wget http://download2.rstudio.org/rstudio-server-0.98.1091-x86_64.rpm
+sudo yum install --nogpgcheck rstudio-server-0.98.1091-x86_64.rpm
+
+
+Next you need to make a user to login to Rstudio-server with:
+
+adduser **user_name**
+passwd **password**
+
+
+You can then connect to rstudio by typing in the DNS:8787 as the URL in your browser:
+
+**DNS**:8787
+# Login with the user and password you created in the previous step.
+
+
+### R Integration Format Requirements:
+
+By default captures the output of 'ess task exec' statements.
+You must have one output to standard out per 'ess task exec' statement.
+Thus you must separate multiple database exports or counts into multiple 'ess task exec' statements.
+
+To ignore a statement, put '#Rignore' at the end of the statement line.
+To include an 'ess task stream' statement, put '#Rinclude' at the end of the statement line.
+
+The output you capture from each statement will be saved into R variables labeled command1, command2, .... in order.
+
+Thus if you have 4 statements total and capture the output from only the second and fourth statements, then 
+the output of those two statements would be saved into R variables 'command1' and 'command2'
+
+Similarly if you have 10 statements total and capture the output from any 6 of the statements they would be stored as
+'command1', 'command2', 'command3', 'command4', 'command5', 'command6'
+in the order that you wrote those six statements.
+
+Essentia's R integration is currently incompatible with the '-notitle' flag used during output in aq_pp and aq_udb. 
+This is because integrater.R takes the first line of output as the header. If you ALWAYS use -notitle and EVERY statement 
+sending output to standard out uses it, then simply change the value of header to FALSE in integrater.R and continue using the '-notitle' flag.

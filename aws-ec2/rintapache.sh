@@ -82,3 +82,4 @@ ess task exec "aq_udb -exp logsapache15:vector15 -o - | aq_pp -f,+1 - -d X i:pag
 ess task exec "aq_udb -exp logsapache16:vector16; echo 'RSTOPHERE'" --debug 
 #ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -32" --debug
 # echo 'RSTOPHERE'
+ess udbd stop
