@@ -1,10 +1,7 @@
 # WARNING: Hardcoded some of the information in here. In particular, the commands' bandwidth 
-# conversion must be entered for each command and the reordering in Visit Duration and Days of the Week is 
-# explicitly set.
+# conversion must be entered for each command.
 
-### Installing and Using Packages
-#install.packages("gdata")
-library(gdata)
+
 
 ### MONTHSUMMARY TABLE (BOTH VIEWED AND NON-VIEWED)
 uniquevisitors <- data.frame(monthsummary = I(c(1)), uniques = c(command1[,2][[2]]))
@@ -74,8 +71,7 @@ names(BadStatus) <- c("HTTP_Status_Code","Pages","Percent","Hits","Percent","Ban
 print(BadStatus)
 
 ### Visit Duration Counts and Percents
-Duration <- command15
-Duration <- Duration[c(4,3,6,7,2,1,5),]
+Duration <- command15[c(which(command15[,1] == "0 - 30s"),which(command15[,1] == "30s - 2min"),which(command15[,1] == "2min - 5min"),which(command15[,1] == "5min - 15min"),which(command15[,1] == "15min - 30min"),which(command15[,1] == "30min - 1hr"),which(command15[,1] == "1hr+")),]
 Duration[,3] <- paste(prop.table(Duration[,2])*100, "%", sep="")
 names(Duration) <- c("Visit_Duration","Visit_Count","Percent")
 print(Duration)
@@ -87,14 +83,17 @@ DaysofMonth <- merge(command13, command4, by="day")
 print(DaysofMonth)
 
 ### Days of Week Visits and Counts
-DaysofWeek <- command5[c(1,2,3,7,5,4,6),]
+DaysofWeek <- command5[c(which(command5[,1] == "Sun"),which(command5[,1] == "Mon"),which(command5[,1] == "Tue"),which(command5[,1] == "Wed"),which(command5[,1] == "Thu"),which(command5[,1] == "Fri"),which(command5[,1] == "Sat")),]
 print(DaysofWeek)
 
 ### Hours Visits and Counts
 Hours <- command6[order(command6[,1]),]
 print(Hours)
 
+
+
 ### Graphing Each Count by Percent of Max Value
+# Month Aggregates
 msgraph <- monthsummary[1,]
 msgraph[,2] <- msgraph[,2]*100/max(msgraph[,2])
 msgraph[,3] <- msgraph[,3]*100/max(msgraph[,3])
@@ -102,35 +101,41 @@ msgraph[,4] <- msgraph[,4]*100/max(msgraph[,4])
 msgraph[,5] <- msgraph[,5]*100/max(msgraph[,5])
 msgraph[,6] <- msgraph[,6]*100/max(msgraph[,6])
 
+# By Day of the Month
 domgraph <- DaysofMonth
 domgraph[,2] <- domgraph[,2]*100/max(domgraph[,2])
 domgraph[,3] <- domgraph[,3]*100/max(domgraph[,3])
 domgraph[,4] <- domgraph[,4]*100/max(domgraph[,4])
 domgraph[,5] <- domgraph[,5]*100/max(domgraph[,5])
 
+# By Day of the Week
 dowgraph <- DaysofWeek
 dowgraph[,2] <- dowgraph[,2]*100/max(dowgraph[,2])
 dowgraph[,3] <- dowgraph[,3]*100/max(dowgraph[,3])
 dowgraph[,4] <- dowgraph[,4]*100/max(dowgraph[,4])
 
+# By Hour of the Day
 hourgraph <- Hours
 hourgraph[,2] <- hourgraph[,2]*100/max(hourgraph[,2])
 hourgraph[,3] <- hourgraph[,3]*100/max(hourgraph[,3])
 hourgraph[,4] <- hourgraph[,4]*100/max(hourgraph[,4])
 
+# By Country ## Limited to countries representing at least 1% of traffic
 countrygraph <- command7
 countrygraph[,2] <- countrygraph[,2]*100/max(countrygraph[,2])
 countrygraph[,3] <- countrygraph[,3]*100/max(countrygraph[,3])
 countrygraph[,4] <- countrygraph[,4]*100/max(countrygraph[,4])
 cgraph <- data.frame(Country = countrygraph[,1][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1], Pages = countrygraph[,2][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1], Hits = countrygraph[,3][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1], Pagebytes = countrygraph[,4][countrygraph[,2]>=1|countrygraph[,3]>=1|countrygraph[,4]>=1])
 
-
+# By Page URL ## Limited to page urls representing at least 1% of traffic
 pagegraph <- command12
 pagegraph[,2] <- pagegraph[,2]*100/max(pagegraph[,2])
 pagegraph[,3] <- pagegraph[,3]*100/max(pagegraph[,3])
 pgraph <- data.frame(PageURL = pagegraph[,1][pagegraph[,2]>=1|pagegraph[,3]>=1], Pagecount = pagegraph[,2][pagegraph[,2]>=1|pagegraph[,3]>=1], Pagebytes = pagegraph[,3][pagegraph[,2]>=1|pagegraph[,3]>=1])
 
 
+
+# Day of Month Graph
 par(mar=c(5, 12.5, 6, 4) + 0.1)
 barplot(t(as.matrix(domgraph[,2:5])), names.arg=domgraph[,1], col=c("black","blue","red","gray"), beside=TRUE, main="DaysofMonth: Visits, Pages, Hits, and Bandwidth",xlab="DayofMonth",axes=FALSE,las=2) #,ylab="Proportion of Counts"
 Axis(side=2, at=seq(0,max(domgraph[,2]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,2]),length.out = 11)),line=.5)
@@ -143,7 +148,7 @@ Axis(side=2, at=seq(0,max(domgraph[,5]),length.out = 11),lwd=2,labels=round(seq(
 mtext(2,text="Percent Of Max Bandwidth",line=11.5)
 legend("topright",inset=c(0,-.15),legend=c("% of Max Visits","% Of Max Pages","% Of Max Hits","% Of Max Bandwidth"),fill=c("black","blue","red","gray"),bty="n")
 
-
+# Day of Week Graph
 par(mar=c(5, 9.5, 6, 4) + 0.1)
 barplot(t(as.matrix(dowgraph[,2:4])), names.arg=dowgraph[,1], col=c("black","blue","red"), beside=TRUE, main="DaysofWeek: Pages, Hits, and Bandwidth",xlab="DayofWeek",axes=FALSE,las=2) #,ylab="Proportion of Counts"
 Axis(side=2, at=seq(0,max(dowgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(DaysofWeek[,2]),length.out = 10)),line=.5)
@@ -154,6 +159,7 @@ Axis(side=2, at=seq(0,max(dowgraph[,4]),length.out = 10),lwd=2,labels=round(seq(
 mtext(2,text="Percent Of Max Bandwidth",line=8.5)
 legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Hits","% of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
 
+# Hour of Day Graph
 par(mar=c(5, 9.5, 6, 4) + 0.1)
 barplot(t(as.matrix(hourgraph[,2:4])), names.arg=hourgraph[,1], col=c("black","blue","red"), beside=TRUE, main="Hours: Pages, Hits, and Bandwidth",xlab="Hour",axes=FALSE,las=2) #,ylab="Proportion of Counts"
 Axis(side=2, at=seq(0,max(hourgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(Hours[,2]),length.out = 10)),line=.5)
@@ -164,7 +170,7 @@ Axis(side=2, at=seq(0,max(hourgraph[,4]),length.out = 10),lwd=2,labels=round(seq
 mtext(2,text="Percent Of Max Bandwidth",line=8.5)
 legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Hits","% of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
 
-
+# Country Graph
 par(mar=c(5, 9.5, 6, 4) + 0.1)
 barplot(t(as.matrix(cgraph[,2:4])), names.arg=cgraph[,1], col=c("black","blue","red"), beside=TRUE, main="Country: Pages, Hits, and Bandwidth",xlab="Country",axes=FALSE,las=2) #,ylab="Proportion of Counts"
 Axis(side=2, at=seq(0,max(cgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(command7[,2]),length.out = 10)),line=.5)
@@ -175,7 +181,7 @@ Axis(side=2, at=seq(0,max(cgraph[,4]),length.out = 10),lwd=2,labels=round(seq(0,
 mtext(2,text="Percent Of Max Bandwidth",line=8.5)
 legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Hits","% of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
 
-
+# Page URL Graph
 par(mar=c(7.5, 12.5, 6, 4) + 0.1)
 barplot(t(as.matrix(pgraph[,2:3])), names.arg=pgraph[,1], col=c("black","red"), beside=TRUE, main="PageURL: Pages and Bandwidth",axes=FALSE,las=2,cex.names=1,horiz=TRUE) #,ylab="Proportion of Counts"
 Axis(side=1, at=seq(0,max(pgraph[,2]),length.out = 10),lwd=2,labels=round(seq(0,max(command12[,2]),length.out = 10)),line=.5)
@@ -184,32 +190,44 @@ Axis(side=1,at=seq(0,max(pgraph[,3]),length.out = 10),lwd=2,labels=round(seq(0,m
 mtext(1,text="Percent Of Max Bandwidth",line=5.5)
 legend("topright",inset=c(0,-.15),legend=c("% of Max Pages","% of Max Bandwidth"),fill=c("black","red"),bty="n")
 
-
 ## remember that this is proportion so a miniscule bar can still be a high number that is just much lower than an outlier on the same graph.
 print(pgraph[,1])
 
-for (df in list(monthsummary,OScounts,Bcounts,SearchKeys,BadStatus,Duration,DaysofMonth,DaysofWeek,Hours,command3,command7,command8,command12)) {
+
+
+### Statistics
+cat("STATISTICS:")
+cat("\n")
+for (dfname in list("monthsummary","OScounts","Bcounts","SearchKeys","BadStatus","Duration","DaysofMonth","DaysofWeek","Hours","command4","command8","command9","command13")) {
+  print(paste("-----------------",dfname,"-----------------",sep=" "))
+  df <- get(dfname)
   print(summary(df[,2:ncol(df)]))
+  # Standard Deviation:
   print(sapply(df[,2:ncol(df)], sd))
   #print(sapply(df, var, na.rm=FALSE))
-  print("-----------------")
+  cat("\n")
 }
 
-### Make Pagebytes Readable...Turn into Bandwidth
 
-monthsummary[,"pagebytes"] <- humanReadable(monthsummary[,"pagebytes"],digits=2,width=NULL)
-command3[,"pagebytes"] <- humanReadable(command3[,"pagebytes"],digits=2,width=NULL)
-DaysofMonth[,"pagebytes"] <- humanReadable(DaysofMonth[,"pagebytes"],digits=2,width=NULL)
-DaysofWeek[,"pagebytes"] <- humanReadable(DaysofWeek[,"pagebytes"],digits=2,width=NULL)
-Hours[,"pagebytes"] <- humanReadable(Hours[,"pagebytes"],digits=2,width=NULL)
-command7[,"pagebytes"] <- humanReadable(command7[,"pagebytes"],digits=2,width=NULL)
-command8[,"pagebytes"] <- humanReadable(command8[,"pagebytes"],digits=2,width=NULL)
-BadStatus[,"Bandwidth"] <- humanReadable(BadStatus[,"Bandwidth"],digits=2,width=NULL)
+
+######## The following is unecessary for the analysis. It simply makes it easier for the user to make use of the provided results.
+
+### Make Pagebytes Readable...Turn into Bandwidth
+## Installing and Using Packages
+#install.packages("gdata")
+#library(gdata)
+#monthsummary[,"pagebytes"] <- humanReadable(monthsummary[,"pagebytes"],digits=2,width=NULL)
+#command3[,"pagebytes"] <- humanReadable(command3[,"pagebytes"],digits=2,width=NULL)
+#DaysofMonth[,"pagebytes"] <- humanReadable(DaysofMonth[,"pagebytes"],digits=2,width=NULL)
+#DaysofWeek[,"pagebytes"] <- humanReadable(DaysofWeek[,"pagebytes"],digits=2,width=NULL)
+#Hours[,"pagebytes"] <- humanReadable(Hours[,"pagebytes"],digits=2,width=NULL)
+#command7[,"pagebytes"] <- humanReadable(command7[,"pagebytes"],digits=2,width=NULL)
+#command8[,"pagebytes"] <- humanReadable(command8[,"pagebytes"],digits=2,width=NULL)
+#BadStatus[,"Bandwidth"] <- humanReadable(BadStatus[,"Bandwidth"],digits=2,width=NULL)
 
 ### Checking that Bandwidth is Readable
-print(DaysofMonth)
+#print(DaysofMonth)
 
-#command17[,"pagebytes"] <- humanReadable(command17[,"pagebytes"],digits=2,width=NULL)
 
 ### Run to save results to local files
 ## saving to directory /home/ec2-user/samples/
