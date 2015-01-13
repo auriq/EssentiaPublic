@@ -16,9 +16,9 @@ adduser **user_name**
 passwd **password**
 
 
-You can then connect to rstudio by typing in the DNS:8787 as the URL in your browser:
+You can then connect to rstudio by typing in your URL followed by :8787 in your browser:
 
-**DNS**:8787
+**URL**:8787
 # Login with the user and password you created in the previous step.
 
 
