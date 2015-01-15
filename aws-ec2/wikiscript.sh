@@ -7,6 +7,11 @@ f () {
     exit 1
 }
 trap f ERR
+
+
+# This script imports two hours of the publicly available Wikipedia Traffic Statistics V2 dataset into a database and sums the page counts and bytes for each unique value of the combination of page name and project code. 
+# It also keeps track of the maximum and minimum page count value over the two hour period to return the range in page counts by unique page name and project code. 
+# The full benchmark ran on two months of the data and could be run by modifying the rule below to categorize the two months of data instead of two hours and selecting a datastore that has the full two months of data.
  
 ess instance local
 ess udbd stop
