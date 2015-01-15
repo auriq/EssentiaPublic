@@ -1,8 +1,10 @@
+# For a detailed walkthrough of this script, see the 'Processing Your Data' tutorial on www.auriq.net
+
 ess instance local      # Starts a local instance since no workers are needed. Tells essentia to work on your machine.
 ess udbd stop            # Checks that the nothing in stored in memory from previous essentia runs.
  
-ess datastore select /home/ec2-user/jobs/data
-ess datastore purge
+ess datastore select s3://asi-public --credentials=/home/ec2-user/jobs/asi-public.csv
+#ess datastore purge
 ess datastore scan
  
 ess datastore rule add "*MOCK_DATA*" "mockdata"
