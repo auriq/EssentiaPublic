@@ -12,10 +12,10 @@ ess spec create vector vector1 s,pkey:referrer i,+add:pagecount
 
 ess udbd start
 
-ess datastore select s3://asi-public --credentials=/home/ec2-user/jobs/asi-public.csv  ## CHANGE
+ess datastore select $HOME/jobs/data  ## CHANGE to $HOME/samples/data
 ess datastore scan
 ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
-# Creates a new rule to take any files with ‘/2014’ followed by another ‘/2014′ in their name and puts them in the 2014logs category.
+# Creates a new rule to take any files with ‘/2014’ followed by another ‘/2014' in their name and puts them in the 2014logs category.
 ess datastore probe 125accesslogs --apply
 ess datastore category change 125accesslogs compression none
 ess datastore summary

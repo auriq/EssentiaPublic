@@ -10,8 +10,8 @@ ess spec create vector vector1 s,pkey:string_col i,+max:integer_col f,+add:float
 
 ess udbd start
 
-ess datastore select s3://asi-public --credentials=/home/ec2-user/jobs/asi-public.csv
-# Tells Essentia to look for data in the publicly available bucket asi-public, which you must still enter your AWS credentials to access.
+ess datastore select $HOME/jobs/data  ## CHANGE to $HOME/samples/data
+# Tells Essentia to look for data on your current machine under the directory $HOME/samples/data.
 ess datastore scan
 ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"
 # Creates a new rule to take any files with ‘fivecoltutorial’ in their name and puts them in the tutorialdata category.
