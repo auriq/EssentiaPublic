@@ -54,7 +54,7 @@ ess task exec "aq_udb -exp purchases:sales -lim_rec 20; aq_udb -exp purchases:us
 # only needed if you are using a multi-node setup.
 
 ## run to output to an S3 bucket:  
-# ess task exec "aq_udb -exp udb_weekly:Profile -local | gzip -3" --s3out=s3://*OutputBucket*/results/profile_%node_id_of_%num_nodes.csv
+# ess task exec "aq_udb -exp purchases:usertotals -local | gzip -3" --s3out=s3://*OutputBucket*/results/profile_%node_id_of_%num_nodes.csv
 ## Make sure to change the output bucket to whichever bucket you want the files to be stored in.
 ## You can only run this command successfully if you have an AWS account and access keys to the bucket you want to output data to. 
 ## For the necessary information to create an AWS account and obtain access keys, go to http://www.auriq.net/getting-started/ 
