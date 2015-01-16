@@ -49,7 +49,7 @@ ess spec drop database logsapache16
 ess spec create database logsapache16 --ports=1
 ess spec create vector vector16 s,pkey:monthsummary i,+add:pagecount i,+add:hitcount i,+add:pagebytes
 ess udbd start
-ess datastore select s3://asi-public --credentials=/home/ec2-user/jobs/asi-public.csv
+ess datastore select $HOME/samples/data
 ess datastore scan
 ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
 ess datastore probe 125accesslogs --apply

@@ -30,7 +30,7 @@ trap f ERR
 
 # setup local instance and select our sample data directory
 ess instance local
-ess datastore select s3://asi-public/diy_woodworking --credentials=/home/ec2-user/jobs/asi-public.csv
+ess datastore select $HOME/samples/data/diy_woodworking
 
 # get a list of the files and generate the index.
 # It will spit out a message indicating that no index file was found in the directory.  This is normal
