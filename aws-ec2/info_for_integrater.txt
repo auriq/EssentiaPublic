@@ -1,12 +1,17 @@
 # It is a good idea to have port 8787 open when using the R integrater and this is necessary when using rstudio-server on an AWS instance.
 
 
+
 ### Installing R and Rstudio-server
+
 First you need to install R and, optionally, Rstudio-server on your machine.
 The commands to do this are, for a linux-based Redhat/CentOS 5.4+ system:
 
 sudo yum update
 sudo yum install R
+
+and, to install Rstudio-server:
+
 sudo yum install openssl098e # Required only for RedHat/CentOS 6 and 7
 wget http://download2.rstudio.org/rstudio-server-0.98.1091-x86_64.rpm
 sudo yum install --nogpgcheck rstudio-server-0.98.1091-x86_64.rpm
@@ -16,8 +21,10 @@ http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/    and
 http://www.rstudio.com/products/rstudio/download-server/
 
 
+
 ### Connecting via Rstudio-server:
-Make sure you have a user you can login to Rstudio-server with. If you dont, create one with:
+
+Make sure you have a user with a username and password so you can login to Rstudio-server. If you dont, create one with:
 
 adduser **user_name**
 passwd **password**
@@ -25,7 +32,9 @@ passwd **password**
 You can then connect to rstudio by typing in your URL followed by :8787 in your browser:
 
 **URL**:8787
-# Login with the user and password you created in the previous step.
+
+Login with the user and password you created in the previous step.
+
 
 
 ### R Integration Instructions:
@@ -35,23 +44,52 @@ an **any_file_name**.R script containing your R analyses. These filenames do NOT
 
 The next requirement is that you store those filenames as 'file' and 'rscriptfile' in the integrater.R script.
 
+file <- "**Any_Script_Name**.sh"
+rscriptfile <- "**Any_Script_Name**.R"
+
 You then simply have R run integrater.R and it will execute both the essentia and R commands.
+
+To have R run both the essentia commands and the commands found in your R file and then exit, run
+
+R -f integrater.R
+
+If you want to stay in R after integrater.R is run, first enter R by typing
+
+R
+
+at the command prompt. Then run the R command:
+
+source("integrater.R", echo=FALSE)
+
 
 
 ### R Integration Format Requirements:
 
+For each statement that you want to capture the output from, you must follow it with
+; echo 'RSTOPHERE' 
+(see the syntax examples below).
+
+
+Ess Task Exec Statements
+
 By default, the R Integrater captures the output of 'ess task exec' statements.
 You must have one output to standard out per 'ess task exec' statement.
 Thus you must separate multiple database exports or counts into multiple 'ess task exec' statements.
-For each 'ess task exec' statement that you want to capture the output from, you must follow it with
-"; echo 'RSTOPHERE'" 
-(see the examples below).
 
-EACH command in your essentia script MUST be written on ONE LINE. You CANNOT just use '\' and continue on the next line.
 
-To ignore a statement, put '#Rignore' at the end of the statement line.
-To include an 'ess task stream' statement, put '#Rinclude' at the end of the statement line. 
-If you want to capture the output of an 'ess task stream' statement, you CANNOT use its '--debug' option.
+Ess Task Stream Statements
+
+To ignore a statement, put #Rignore  at the end of the statement line.
+To include an ess task stream  statement, put #Rinclude  at the end of the statement line.
+If you want to capture the output of an ess task stream  statement, you CANNOT use its --debug  option.
+
+If you are streaming multiple files from one category and want to include that statement, you must include a
+-notitle  flag somewhere in your statement, in addition to  #Rinclude .
+
+To separate these files into separate variables in R, include #Rseparate  somewhere in your statement line.
+
+
+Order of R Variables
 
 The output you capture from each statement will be saved into R variables labeled command1, command2, .... in order.
 
@@ -62,11 +100,9 @@ Similarly if you have 10 statements total and capture the output from any 6 of t
 'command1', 'command2', 'command3', 'command4', 'command5', 'command6'
 in the order that you wrote those six statements.
 
-Essentia's R integration is currently incompatible with the '-notitle' flag used during output in aq_pp and aq_udb. 
-This is because integrater.R takes the first line of output as the header. If you ALWAYS use -notitle and EVERY statement 
-sending output to standard out uses it, then simply change the value of header to FALSE in integrater.R and continue using the '-notitle' flag.
 
-# Examples:
+Syntax Examples:
+
 ess task exec "aq_udb -cnt **database_name**:vector1; echo 'RSTOPHERE'" --debug
 Outputs to std. out. (default) and will be captured in an R variable. This is the main use for the R integrater.
 
@@ -76,22 +112,63 @@ This will IGNORE this 'ess task exec' statement and this statement's output will
 ess task stream category startdate enddate "**command**; echo 'RSTOPHERE'" --debug #Rinclude
 Takes the output of this 'ess task stream' command and saves it into a variable in R. 
 
-There are additional requirements to **command**. This stream command must output a header as the first line of output and should be error-free. 
-A command such as 'head -30' will work. You can use it to preview and analyze the top records in each of your files.
+A command such as head -30  will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
+
+
+
+# Saving Files Into R Variables
 
 You can also save your files into R variables using
-ess task stream category startdate enddate "cat -; echo 'RSTOPHERE'" #Rinclude 
-for .csv files only or
-ess task stream category startdate enddate "aq_pp -f,eok - -d %cols; echo 'RSTOPHERE'" #Rinclude
-for any file with a constant delimiter
-This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R).
-You can also only use this for one file per 'ess task stream' command.
 
-For any more complicated, delimited format you can use logcnv to convert the format to csv within the stream commmand. All of the following examples will work. The data they're acting on is in Extended Apache Log Format.
+ess task stream category startdate enddate "cat -; echo 'RSTOPHERE'" #Rinclude for .csv files only or
+
+ess task stream category startdate enddate "aq_pp -f,eok - -d %cols; echo 'RSTOPHERE'" #Rinclude for any file with a constant delimiter. 
+This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R).
+
+When saving multiple files from one category into R, you MUST include Essentia’s -notitle flag somewhere on the line (it can be in a comment if you prefer). 
+You also have the option of saving all of the files you are streaming as one variable or into separate variables (one for each file). 
+By default, the R integrator loads all of the files used in one ess task stream  statement into a single R variable. To store each file into its own distinct R variable, run
+
+ess task stream category startdate enddate "aq_pp -notitle -f,eok - -d %cols; echo 'RSTOPHERE'" #Rseparate #Rinclude
+
+This will also cause the R integrator to automatically save the filenames of the stored files into a single additional R variable.
+
+
+
+# Access Log Data Integration Syntax Examples
+
+For any more complicated, delimited format you can use logcnv to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they’re acting on is in Extended Apache Log Format.
+
 ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -; echo 'RSTOPHERE'" #Rinclude
+ 
 ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X; echo 'RSTOPHERE'" #Rinclude
+ 
 ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X; echo 'RSTOPHERE'" #Rinclude
+ 
 ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X; echo 'RSTOPHERE'" #Rinclude
+ 
 ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X | head -30; echo 'RSTOPHERE'" #Rinclude
+ 
 ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X | head -q; echo 'RSTOPHERE'" #Rinclude
 
+
+
+# Purchase Data Integration Syntax Examples
+
+These next examples work on the diy_workshop purchase data available in the samples folder provided with Essentia or on Auriq’s publicly accessible bucket asi_public.
+
+ess task stream purchase "2014-09-15" "2014-09-15" "aq_pp -f,eok - -d X s:userid X f:price X; echo 'RSTOPHERE'" #Rinclude
+ 
+ess task stream purchase "2014-09-16" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X; echo 'RSTOPHERE'" #Rinclude
+ 
+ess task stream purchase "2014-09-17" "2014-09-17" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X; echo 'RSTOPHERE'" #Rinclude
+ 
+ess task stream purchase "2014-09-15" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X; echo 'RSTOPHERE'" #Rseparate #Rinclude
+ 
+ess task stream purchase 2014-09-01 2014-09-03 "aq_pp -notitle -stat -f,eok - -d %cols; echo 'RSTOPHERE'" #Rinclude
+ 
+ess task exec "echo \"1, 2, 3, 4, 5\"; echo 'RSTOPHERE'" #-notitle
+ 
+ess task stream purchase "*" "*" \
+"head -10 | aq_pp -notitle -f,+1,eok - -d %cols; echo 'RSTOPHERE'" \
+#Rinclude
