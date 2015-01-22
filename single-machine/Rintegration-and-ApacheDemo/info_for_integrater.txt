@@ -74,7 +74,7 @@ Similarly if you have 10 statements total and capture the output from any 6 of t
 'command1', 'command2', 'command3', 'command4', 'command5', 'command6'
 in the order that you wrote those six statements.
 
-You can change the name of the output variable with #R#any_variable_name#R#
+You can change the name of the output variable by including #R#any_variable_name#R# somewhere in your statement line.
 However, this is NOT compatible with an ess task stream statement that uses #Rseparate.
 
 

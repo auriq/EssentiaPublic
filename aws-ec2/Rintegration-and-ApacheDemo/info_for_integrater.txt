@@ -75,11 +75,11 @@ Ess Task Exec Statements
 By default, the R Integrater captures the output of 'ess task exec' statements.
 You must have one output to standard out per 'ess task exec' statement.
 Thus you must separate multiple database exports or counts into multiple 'ess task exec' statements.
+To ignore a statement, put #Rignore  at the end of the statement line.
 
 
 Ess Task Stream Statements
 
-To ignore a statement, put #Rignore  at the end of the statement line.
 To include an ess task stream  statement, put #Rinclude  at the end of the statement line.
 If you want to capture the output of an ess task stream  statement, you CANNOT use its --debug  option.
 
@@ -99,6 +99,9 @@ the output of those two statements would be saved into R variables 'command1' an
 Similarly if you have 10 statements total and capture the output from any 6 of the statements they would be stored as
 'command1', 'command2', 'command3', 'command4', 'command5', 'command6'
 in the order that you wrote those six statements.
+
+You can change the name of the output variable by including #R#any_variable_name#R# somewhere in your statement line.
+However, this is NOT compatible with an ess task stream statement that uses #Rseparate.
 
 
 Syntax Examples:

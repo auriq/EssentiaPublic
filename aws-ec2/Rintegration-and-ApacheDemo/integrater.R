@@ -20,6 +20,11 @@ for (line in lines) {
     if (grepl("-notitle", line)) {
        colspec <- FALSE
     }
+    varname <- ''
+    if (grepl("#R#",line)) {
+       titleindex <- grepRaw("#R#",line,all=TRUE)
+       varname <- substr(line, titleindex[[1]]+3, titleindex[[2]]-1)
+    }
     t1 <- pipe(line,open="r")
     t2 <- read.csv(t1,header=colspec,sep=",",quote="\"'",comment.char = "#",blank.lines.skip=FALSE,allowEscapes=TRUE,skip=0)
     index <- 1
@@ -37,9 +42,16 @@ for (line in lines) {
            t3 <- rbind(t3, t2[index:(which(t2[,1] == 'RSTOPHERE')[[file]] - 1),1:ncol(t2)])
            index <- which(t2[,1] == 'RSTOPHERE')[[file]] + 1
            if (file == length(which(t2[,1] == 'RSTOPHERE'))) {
-              assign(sprintf("command%i",commandcount), t3)
-              print(get(sprintf("command%i",commandcount)))
-              print(sprintf("---------------- Output Stored in command%i ----------------", commandcount))
+              if (varname == '') {
+                 assign(sprintf("command%i",commandcount), t3)
+                 print(get(sprintf("command%i",commandcount)))
+                 print(sprintf("---------------- Output Stored in command%i ----------------", commandcount))
+              }
+              else {
+                 assign(sprintf("%s",varname), t3)
+                 print(get(sprintf("%s",varname)))
+                 print(sprintf("---------------- Output Stored in %s ----------------", varname))
+              }
               commandcount <- commandcount + 1
            }
         }
