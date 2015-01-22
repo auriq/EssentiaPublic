@@ -20,4 +20,4 @@ ess udbd start            # Starts communication with worker nodes (or master by
 ess task stream mockdata "*" "*" "aq_pp -f,+1,eok - -d s:column_to_import -evlc f:float_column_to_import '(ToF(column_to_import))' -filt '(float_column_to_import >= 1 && float_column_to_import <= 8)' -evlc s:my_string_column_to_group_by 'ToS(1)' \
 -evlc f:rowcount '\$RowNum' -ddef -udb_imp etl-ess2working:vector1" --debug
  
-ess task exec "aq_udb -exp etl-ess2working:vector1 -pp vector1 -pp_evlc rowcount2 'rowcount' -pp_evlc rowcount 'float_column_to_import / rowcount' -o /home/ec2-user/jobs/etl-ess2working.csv -o -; aq_udb -cnt etl-ess2working:vector1" --debug
+ess task exec "aq_udb -exp etl-ess2working:vector1 -pp vector1 -pp_evlc rowcount2 'rowcount' -pp_evlc rowcount 'float_column_to_import / rowcount' -o /home/ec2-user/jobs/etl-ess2working.csv; aq_udb -cnt etl-ess2working:vector1" --debug

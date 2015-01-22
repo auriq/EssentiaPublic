@@ -1,4 +1,5 @@
 # This script imports two datasets, uses the rankings dataset to lookup and replace the destination URL with the corresponding page rank, calculates the average page rank and total ad revenue by unique sourceIP, and outputs the results sorted by total ad revenue.
+# It must be run on an instance larger than a t2.micro.
 
 ess instance local
 ess udbd stop
@@ -24,8 +25,8 @@ ess task stream rankings "*" "*" "aq_pp -f,eok - -d s:pageURL s:pageRank X -o,ap
 # Pipes all files in the category rankings to the aq_pp command, and runs this command 10 times (allowing you to stream 10 files simultaneously). In the aq_pp command, tells the preprocessor to take data from stdin, ignoring errors. 
 # Then defines the incoming data’s columns, skipping the third column, and writes the data to a lookup csv file on your local machine.
 
-ess task stream uservisits "*" "*" "aq_pp -f,eok - -d s:sourceIP s:destURL s:visitDate f:adRevenue X X X X X -evlc i:dt 'DateToTime(visitDate,\"Y.m.d\")' -filt '((dt >= 315532860) && (dt <= 788918460))' - \
-sub,req destURL /home/ec2-user/jobs/lookuppagerank.csv -evlc f:avgpageRank 'ToF(destURL)' -evlc f:row '1' -udb_imp amp1nodeess2:vector1" --debug --thread=2
+ess task stream uservisits "*" "*" "aq_pp -f,eok - -d s:sourceIP s:destURL s:visitDate f:adRevenue X X X X X -evlc i:dt 'DateToTime(visitDate,\"Y.m.d\")' -filt '((dt >= 315532860) && (dt <= 788918460))' \
+-sub,req destURL /home/ec2-user/jobs/lookuppagerank.csv -evlc f:avgpageRank 'ToF(destURL)' -evlc f:row '1' -udb_imp amp1nodeess2:vector1" --debug --thread=2
 # Pipes all files in the uservisits category to the aq_pp command, cutting out the last five coumns of each file. Creates a column containing the Posix time of each user’s visit and limits the data to users who visited between two POSIX times. 
 # Uses the lookup file created in the previous step to replace each destination URL with the corresponding page Rank and creates a column that contains the float version of these values. 
 # Creates a new column called ‘row’ to keep track of the number of rows per sourceIP and imports the data into the vector in the database so the attributes listed there can be applied.
