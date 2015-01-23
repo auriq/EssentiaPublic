@@ -1,12 +1,3 @@
-#file <- "**Your_Essentia_Script**.sh"
-#rscriptfile <- "**Your_R_Script**.R"
-
-## For Apache Analysis Demonstration
-file <- "timeapache.sh"
-rscriptfile <- "timeapache.R"
-#file <- "rintapache.sh"
-#rscriptfile <- "rintapache.R"
-
 commandcount <- 1
 lineold <- ""
 lines <- readLines(file)
@@ -19,7 +10,7 @@ for (line in lines) {
   }
   else {
        lineold <- ""
-       print(line)
+#       print(line)
   }
   if (((substr(line, 1, 13) == "ess task exec") && (substr(line, nchar(line) - 7, nchar(line)) != "#Rignore")) || ((substr(line, 1, 15) == "ess task stream") && (substr(line, nchar(line) - 8, nchar(line)) == "#Rinclude"))) {
     colspec <- TRUE
@@ -90,8 +81,3 @@ for (line in lines) {
 print(sprintf("---------------- There are a total of %i commands ----------------", commandcount - 1))
 
 remove(colspec,commandcount,file,index,line,lineold,lines,separate,t3,varname)
-
-source(rscriptfile, echo=TRUE)
-# Turn echo to FALSE to make the output on your screen more results-oriented
-
-remove(rscriptfile)
