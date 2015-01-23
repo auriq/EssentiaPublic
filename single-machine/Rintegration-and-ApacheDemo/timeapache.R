@@ -29,15 +29,15 @@ msgraph <- monthsummary[1,]
 msgraph[,2] <- msgraph[,2]*100/max(msgraph[,2])
 msgraph[,3] <- msgraph[,3]*100/max(msgraph[,3])
 msgraph[,4] <- msgraph[,4]*100/max(msgraph[,4])
-msgraph[,5] <- msgraph[,5]*100/max(msgraph[,5])
-msgraph[,6] <- msgraph[,6]*100/max(msgraph[,6])
+#msgraph[,5] <- msgraph[,5]*100/max(msgraph[,5])
+#msgraph[,6] <- msgraph[,6]*100/max(msgraph[,6])
 
 # By Day of the Month
 domgraph <- DaysofMonth
 domgraph[,2] <- domgraph[,2]*100/max(domgraph[,2])
 domgraph[,3] <- domgraph[,3]*100/max(domgraph[,3])
 domgraph[,4] <- domgraph[,4]*100/max(domgraph[,4])
-domgraph[,5] <- domgraph[,5]*100/max(domgraph[,5])
+#domgraph[,5] <- domgraph[,5]*100/max(domgraph[,5])
 
 # By Day of the Week
 dowgraph <- DaysofWeek
@@ -55,16 +55,16 @@ hourgraph[,4] <- hourgraph[,4]*100/max(hourgraph[,4])
 
 # Day of Month Graph
 par(mar=c(5, 12.5, 6, 4) + 0.1)
-barplot(t(as.matrix(domgraph[,2:5])), names.arg=domgraph[,1], col=c("black","blue","red","gray"), beside=TRUE, main="DaysofMonth: Visits, Pages, Hits, and Bandwidth",xlab="DayofMonth",axes=FALSE,las=2) #,ylab="Proportion of Counts"
-Axis(side=2, at=seq(0,max(domgraph[,2]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,2]),length.out = 11)),line=.5)
-mtext(2,text="Percent Of Max Visits",line=2.5)
-Axis(side=2,at=seq(0,max(domgraph[,3]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,3]),length.out = 11)),line=3.5)
+barplot(t(as.matrix(domgraph[,2:4])), names.arg=domgraph[,1], col=c("black","blue","red"), beside=TRUE, main="DaysofMonth: Pages, Hits, and Bandwidth",xlab="DayofMonth",axes=FALSE,las=2) #,ylab="Proportion of Counts"
+#Axis(side=2, at=seq(0,max(domgraph[,2]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,2]),length.out = 11)),line=.5)
+#mtext(2,text="Percent Of Max Visits",line=2.5)
+Axis(side=2,at=seq(0,max(domgraph[,3]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,2]),length.out = 11)),line=3.5)
 mtext(2,text="Percent Of Max Pages",line=5.5)
-Axis(side=2, at=seq(0,max(domgraph[,4]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,4]),length.out = 11)),line=6.5)
+Axis(side=2, at=seq(0,max(domgraph[,4]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,3]),length.out = 11)),line=6.5)
 mtext(2,text="Percent Of Max Hits",line=8.5)
-Axis(side=2, at=seq(0,max(domgraph[,5]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,5]),length.out = 11)),line=9.5)
+Axis(side=2, at=seq(0,max(domgraph[,5]),length.out = 11),lwd=2,labels=round(seq(0,max(DaysofMonth[,4]),length.out = 11)),line=9.5)
 mtext(2,text="Percent Of Max Bandwidth",line=11.5)
-legend("topright",inset=c(0,-.15),legend=c("% of Max Visits","% Of Max Pages","% Of Max Hits","% Of Max Bandwidth"),fill=c("black","blue","red","gray"),bty="n")
+legend("topright",inset=c(0,-.15),legend=c("% Of Max Pages","% Of Max Hits","% Of Max Bandwidth"),fill=c("black","blue","red"),bty="n")
 
 # Day of Week Graph
 par(mar=c(5, 9.5, 6, 4) + 0.1)
