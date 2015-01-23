@@ -2,8 +2,10 @@
 #rscriptfile <- "**Your_R_Script**.R"
 
 ## For Apache Analysis Demonstration
-file <- "rintapache.sh"
-rscriptfile <- "rintapache.R"
+file <- "timeapache.sh"
+rscriptfile <- "timeapache.R"
+#file <- "rintapache.sh"
+#rscriptfile <- "rintapache.R"
 
 commandcount <- 1
 lineold <- ""
@@ -14,6 +16,10 @@ for (line in lines) {
   if (substr(line,nchar(line),nchar(line)) == "\\") {
        lineold <- substr(line,1,nchar(line)-1)
        next
+  }
+  else {
+       lineold <- ""
+       print(line)
   }
   if (((substr(line, 1, 13) == "ess task exec") && (substr(line, nchar(line) - 7, nchar(line)) != "#Rignore")) || ((substr(line, 1, 15) == "ess task stream") && (substr(line, nchar(line) - 8, nchar(line)) == "#Rinclude"))) {
     colspec <- TRUE
