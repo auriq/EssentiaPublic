@@ -3,6 +3,7 @@ lineold <- ""
 lines <- readLines(file)
 for (line in lines) {
 #  print(line)
+  skiplines <- 0
   line <- paste(lineold,line,sep="")
   if (substr(line,nchar(line),nchar(line)) == "\\") {
        lineold <- substr(line,1,nchar(line)-1)
@@ -22,8 +23,11 @@ for (line in lines) {
        titleindex <- grepRaw("#R#",line,all=TRUE)
        varname <- substr(line, titleindex[[1]]+3, titleindex[[2]]-1)
     }
+    if ((substr(line, 1, 15) == "ess task stream") && (substr(line, nchar(line) - 8, nchar(line)) == "#Rinclude")) {
+       skiplines <- 1
+    }
     t1 <- pipe(line,open="r")
-    t2 <- read.csv(t1,header=colspec,sep=",",quote="\"'",comment.char = "#",blank.lines.skip=FALSE,allowEscapes=TRUE,skip=0)
+    t2 <- read.csv(t1,header=colspec,sep=",",quote="\"'",comment.char = "#",blank.lines.skip=FALSE,allowEscapes=TRUE,skip=skiplines)
     index <- 1
     t3 <- NULL
     separate <- grepl(" #Rseparate", line)
@@ -80,4 +84,4 @@ for (line in lines) {
 
 print(sprintf("---------------- There are a total of %i commands ----------------", commandcount - 1))
 
-remove(colspec,commandcount,file,index,line,lineold,lines,separate,t3,varname)
+remove(colspec,commandcount,file,index,line,lineold,lines,separate,t3,varname,skiplines)
