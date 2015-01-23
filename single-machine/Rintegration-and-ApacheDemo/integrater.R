@@ -89,5 +89,9 @@ for (line in lines) {
 
 print(sprintf("---------------- There are a total of %i commands ----------------", commandcount - 1))
 
+remove(colspec,commandcount,file,index,line,lineold,lines,separate,t3,varname)
+
 source(rscriptfile, echo=TRUE)
 # Turn echo to FALSE to make the output on your screen more results-oriented
+
+remove(rscriptfile)
