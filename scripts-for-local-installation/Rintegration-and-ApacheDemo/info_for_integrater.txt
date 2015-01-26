@@ -13,27 +13,47 @@ http://www.jason-french.com/blog/2013/03/11/installing-r-in-linux/    and
 
 ### R Integration Instructions:
 
-In order to use R with essentia, you must have an **any_file_name**.sh script containing your essentia commands and
-an **any_file_name**.R script containing your R analyses. These filenames do NOT have to be the same. 
+In order to use R with essentia, you must have an 
 
-The next requirement is that you store those filenames as 'file' and 'rscriptfile' in the integrater.R script.
+**any_file_name_1**.sh script containing essentia commands that input data into the database (most 'ess task stream' comands),
+**any_file_name_2**.sh script that contains your queries to the database, and
+**any_file_name**.R script containing your R analyses. 
 
-file <- "**Any_Script_Name**.sh"
-rscriptfile <- "**Any_Script_Name**.R"
+These filenames do NOT have to be the same. 
 
-You then simply have R run integrater.R and it will execute both the essentia and R commands.
+The next requirement is that you store the query and R scripts' filenames as 'file' and 'rscriptfile' in the runr.R script.
 
-To have R run both the essentia commands and the commands found in your R file and then exit, run
+file <- "**any_file_name_2**.sh"
+rscriptfile <- "**any_file_name**.R"
 
-R -f integrater.R
+You then simply run 'bash **any_file_name_1.sh' to load your data into the essentia database and then have R run 'runr.R' and it will execute both the essentia and R commands.
 
-If you want to stay in R after integrater.R is run, first enter R by typing
+To have R run both the essentia queries and the commands found in your R file and then exit, run
+
+R -f runr.R
+
+If you want to stay in R after runr.R is run, first enter R by typing
 
 R
 
 at the command prompt. Then run the R command:
 
-source("integrater.R", echo=FALSE)
+source("runr.R", echo=FALSE)
+
+
+Running the Apache Example
+
+1. Run 'bash loadtimeapache.sh' on the command line.
+
+2. Open 'runr.R' and enter 'querytimeapache.sh' for file and 'timeapache.R' for rscriptfile. # These are the defaults but you will normally have to do this step.
+
+3. Run 'R' on the command line.
+
+4. In the R prompt that appears, run 'source("runr.R", echo=FALSE)'
+
+You will see the results of the analysis print to the screen.
+
+To see the commands involved in getting this analysis, either rerun 'runr.R' with echo=TRUE or open the 'querytimeapache.sh' and 'timeapache.R' files.
 
 
 
@@ -42,6 +62,8 @@ source("integrater.R", echo=FALSE)
 For each statement that you want to capture the output from, you must follow it with
 ; echo 'RSTOPHERE' 
 (see the syntax examples below).
+
+You should include all of these statements in the script containing your essentia query commands.
 
 
 Ess Task Exec Statements
