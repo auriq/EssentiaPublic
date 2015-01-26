@@ -10,7 +10,7 @@ ess spec create vector vector1 s,pkey:string_col i,+max:integer_col f,+add:float
 
 ess udbd start
 
-ess datastore select $HOME/samples/data
+ess datastore select $HOME/samples/data-for-local-installation
 # Tells Essentia to look for data on your current machine under the directory $HOME/samples/data.
 ess datastore scan
 ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"

@@ -3,7 +3,7 @@
 ess instance local      # Starts a local instance since no workers are needed. Tells essentia to work on your machine.
 ess udbd stop            # Checks that the nothing in stored in memory from previous essentia runs.
  
-ess datastore select $HOME/samples/data
+ess datastore select $HOME/samples/data-for-local-installation
 #ess datastore purge
 ess datastore scan
  

@@ -26,7 +26,7 @@ ess udbd stop
 # ess instance ec2 create --number=2
 ## ess instance ec2 existing # run if you already created the worker instances
 
-ess datastore select $HOME/samples/data/diy_woodworking
+ess datastore select $HOME/samples/data-for-local-installation/diy_woodworking
 ess datastore purge
 ess datastore scan
 ess datastore rule add "*purchase*gz" purchase "YYYYMMDD"
