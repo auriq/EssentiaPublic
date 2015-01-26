@@ -9,6 +9,6 @@ rscriptfile <- "timeapache.R"
 
 source("integrater.R", echo=FALSE)
 source(rscriptfile, echo=FALSE)
-# Turn echo to FALSE to make the output on your screen more results-oriented
+# Turn echo to TRUE to make the output less results-oriented and easier to debug.
 remove(rscriptfile)
 
