@@ -4,7 +4,7 @@
 ## For Apache Analysis Demonstration
 file <- "querytimeapache.sh"
 rscriptfile <- "timeapache.R"
-#file <- "rintapache.sh"
+#file <- "queryrintapache.sh"
 #rscriptfile <- "rintapache.R"
 
 source("integrater.R", echo=FALSE)
