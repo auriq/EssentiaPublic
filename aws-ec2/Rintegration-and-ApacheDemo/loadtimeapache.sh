@@ -34,7 +34,7 @@ ess datastore summary
 
 
 
-ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
+ess task stream 125accesslogs "2014-11-16" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
 | aq_pp -emod rt -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -evlc i:hitcount '1' -evlc s:monthsummary 'ToS(1)' \
 -if -filt 'accessedfile ~~~ \"*.html[?,#]?*\" || accessedfile ~~~ \"*.htm[?,#]?*\" || accessedfile ~~~ \"*.php[?,#]?*\" || accessedfile ~~~ \"*.asp[?,#]?*\" || accessedfile ~~~ \"*/\" || accessedfile ~~~ \"*.php\"' -evlc i:pagecount '1' -evlc s:pageurl 'accessedfile' \
 -else -evlc pagecount '0' -endif -evlc s:day 'TimeToDate(time,\"%d\")' -evlc s:dayoftheweek 'TimeToDate(time,\"%a\")' -evlc s:hour 'TimeToDate(time,\"%H\")' \
