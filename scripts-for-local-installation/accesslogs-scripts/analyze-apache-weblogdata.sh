@@ -12,7 +12,7 @@ ess spec create vector vector1 s,pkey:referrer i,+add:pagecount
 
 ess udbd start
 
-ess datastore select $HOME/samples/data-for-local-installation
+ess datastore select ../../data-for-local-installation
 ess datastore scan
 ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
 # Creates a new rule to take any files with ‘/2014’ followed by another ‘/2014' in their name and puts them in the 2014logs category.

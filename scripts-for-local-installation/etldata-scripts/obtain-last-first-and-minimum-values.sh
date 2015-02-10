@@ -10,7 +10,7 @@ ess spec create vector vector1 s,pkey:country s,+last:first_name s,+first:last_n
 
 ess udbd start
 
-ess datastore select $HOME/samples/data-for-local-installation
+ess datastore select ../../data-for-local-installation
 # Tells Essentia to look for data on your current machine under the directory $HOME/samples/data.
 ess datastore scan
 ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"
@@ -22,7 +22,7 @@ ess task stream tutorialdata "*" "*" "aq_pp -f,+1,eok - -d f:float_col i:integer
 # Pipes all files in the category tutorialdata to the aq_pp command. In the aq_pp command, tells the preprocessor to take data from stdin, ignoring errors and skipping the first line (the header). 
 # Then defines the incoming data’s columns, and imports the data to the vector in the fivecoltutorial database so the attributes listed there can be applied.
 
-ess task exec "aq_udb -exp fivecoltutorial:vector1 -o /home/ec2-user/samples/countrytutorialresults.csv" --debug 
+ess task exec "aq_udb -exp fivecoltutorial:vector1 -o countrytutorialresults.csv" --debug 
 # Exports the modified and aggregated data from the database and saves the results to a csv file.
 
 ess udbd stop
