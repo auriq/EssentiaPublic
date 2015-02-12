@@ -24,7 +24,7 @@ ess instance ec2 create --number=2
 ## ess instance ec2 existing # run if you already created the worker instances
 ess udbd stop
 
-ess datastore select s3://asi-public/diy_woodworking --credentials=/home/ec2-user/jobs/asi-public.csv
+ess datastore select s3://asi-public/diy_woodworking --credentials=../../asi-public.csv
 ess datastore scan
 ess datastore rule add "*purchase*gz" purchase "YYYYMMDD"
 ess datastore probe purchase --apply

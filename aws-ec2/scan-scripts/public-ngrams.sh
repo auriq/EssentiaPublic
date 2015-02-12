@@ -1,5 +1,5 @@
 ess instance local
-ess datastore select s3://datasets.elasticmapreduce/ngrams/books/ --credentials=/home/ec2-user/jobs/asi-public.csv
+ess datastore select s3://datasets.elasticmapreduce/ngrams/books/ --credentials=../../asi-public.csv
 ess datastore scan
 ess datastore summary
 ess datastore ls "*" | wc -l                     

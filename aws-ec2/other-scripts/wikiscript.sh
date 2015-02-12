@@ -23,7 +23,7 @@ ess spec create table table1 s,pkey:name s,+key:code i,+add:count i,+add:bytes i
  
 ess udbd start
  
-ess datastore select s3://asi-public --credentials=/home/ec2-user/jobs/asi-public.csv
+ess datastore select s3://asi-public --credentials=../../asi-public.csv
 ess datastore scan
 ess datastore rule add "*pagecounts*" wiki "YYYYMMDD-0"
 ess datastore category change wiki compression gzip
