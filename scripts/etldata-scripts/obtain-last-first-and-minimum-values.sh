@@ -10,8 +10,8 @@ ess spec create vector vector1 s,pkey:country s,+last:first_name s,+first:last_n
 
 ess udbd start
 
-ess datastore select ../../data-for-local-installation
-# Tells Essentia to look for data on your current machine under the directory $HOME/samples/data.
+ess datastore select ../../data
+# Tells Essentia to look for data on your current machine under the directory ../../data.
 ess datastore scan
 ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"
 # Creates a new rule to take any files with ‘fivecoltutorial’ in their name and puts them in the tutorialdata category.

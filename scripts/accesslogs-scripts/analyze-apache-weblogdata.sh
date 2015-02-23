@@ -12,7 +12,7 @@ ess spec create vector vector1 s,pkey:referrer i,+add:pagecount
 
 ess udbd start
 
-ess datastore select ../../data-for-local-installation
+ess datastore select ../../data
 ess datastore scan
 ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
 # Creates a new rule to take any files with ‘/2014’ followed by another ‘/2014' in their name and puts them in the 2014logs category.
@@ -21,7 +21,7 @@ ess datastore category change 125accesslogs compression none
 ess datastore summary
 
 ess task stream 125accesslogs "2014-11-30" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size \
-sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d X X X X X X X X X s:referrer X -evlc i:pagecount "1" -ddef -udb_imp apache:vector1" --debug
+sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d X X X X X X X X X s:referrer X -evlc i:pagecount \"1\" -ddef -udb_imp apache:vector1" --debug
 # Pipes the files in the category 2014logs that were created between April 1st and 5th, 2014 to the aq_pp command. In the aq_pp command, tells the preprocessor to take data from stdin, ignoring errors and not outputting any error messages. 
 # Then defines the incoming data’s columns, skipping all of the columns except referrer, and creates a column called pagecount that always contains the value 1. Then imports the data to the vector in the apache database so the attributes listed there can be applied.
 

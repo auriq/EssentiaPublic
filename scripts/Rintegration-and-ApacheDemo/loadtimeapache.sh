@@ -23,7 +23,7 @@ ess spec create vector vector4 s,pkey:dayoftheweek i,+add:pagecount i,+add:hitco
 
 ess udbd start
 
-ess datastore select ../../data-for-local-installation
+ess datastore select ../../data
 ess datastore scan
 ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
 # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.

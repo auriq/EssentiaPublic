@@ -49,7 +49,7 @@ ess spec drop database logsapache16
 ess spec create database logsapache16 --ports=1
 ess spec create vector vector16 s,pkey:monthsummary i,+add:pagecount i,+add:hitcount i,+add:pagebytes
 ess udbd start
-ess datastore select ../../data-for-local-installation
+ess datastore select ../../data
 ess datastore scan
 ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
 ess datastore probe 125accesslogs --apply
