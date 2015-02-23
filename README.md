@@ -1,11 +1,13 @@
 # EssentiaPublic
-Documents/Samples to share to public
 
-**aws-ec2/** contains sample scripts that run on files stored on Amazon S3.
+This repository contains the data and scripts used at the [Essentia Documentation Portal](http://www.auriq.net/documentation/).
+What is Essentia? It is a general pupose but very power text processing engine.  It provides ETL tools, an in-memory map/reduce style database, and file management/accounting.  If you use it on Amazon Web Services (AWS), all of the tools can be scaled to handle massive workloads.
 
-**data-for-local-installation/** contain the data provided in the local installation, 
-which is used for the scripts in **scripts-for-local-installation/**
+For more information, please visit the [Essentia Home Page](http://www.auriq.net)
 
-Both **aws-ec2/** and **scripts-for-local-installation/** contain sample scripts that give you a brief description of how to analyze different sets of data, in an effort to get you used to essentia and on your way analyzing your own data. 
+## Description of files
 
-There is also a very useful tutorial at http://www.auriq.net/documentation/source/tutorial/essentia/scaling_udb that we highly recommend you go through as it provides a detailed introduction to the primary essentia commands.
+
+1. **data** contains all of the raw data used in the tutorials.
+2. **scripts** contain most of the scripts used. The documentation itself has smaller code snippets at times that are not replicated here.
+3. **aws** contains the scripts used when demonstrating how Essentia scales on the cloud.  The data associated with these are too large to distribute, so we have made available a public S3 bucket that stores the data.
