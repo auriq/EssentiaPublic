@@ -17,7 +17,7 @@ ess instance local
 ess udbd stop
 
 #ess spec reset 
-#ess spec drop database wikitwohouress2
+ess spec drop database wikitwohouress2
 ess spec create database wikitwohouress2 --ports=1
 ess spec create table table1 s,pkey:name s,+key:code i,+add:count i,+add:bytes i,+max:maxcount i,+min:mincount
  
@@ -31,5 +31,8 @@ ess datastore summary
  
 ess task stream wiki "2009-01-01" "2009-01-01" "aq_pp -f,sep=' ',eok - -d s:code s:name i:count i:bytes -evlc i:maxcount 'count' -evlc i:mincount 'count' -ddef -udb_imp wikitwohouress2:table1" --debug
  
-ess task exec "aq_udb -exp wikitwohouress2:table1 -pp table1 -pp_evlc maxcount 'maxcount - mincount' -o - -c name code count bytes maxcount" --debug ## add if you want to ouput to S3 ## --s3out=s3://*YourBucket*/streamwikitwohouress2.csv.gz 
+ess task exec "aq_udb -exp wikitwohouress2:table1 -pp table1 -pp_evlc maxcount 'maxcount - mincount' -o wikioutput.csv -c name code count bytes maxcount" --debug ## add if you want to ouput to S3 ## --s3out=s3://*YourBucket*/streamwikitwohouress2.csv.gz 
 # Be sure to change *YourBucket* to whichever bucket you want your results output to.
+# To output to S3 you also need to chaneg '-o wikioutput.csv' to '-o -' (sending the output to standard out so it can then be sent to S3)
+
+# Note: The column maxcount contains the range of the count values for each unique name and code combination.
