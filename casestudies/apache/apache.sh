@@ -17,7 +17,7 @@ ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
 ess datastore probe 125accesslogs --apply
 ess datastore summary
 
-ess task stream 125accesslogs "2014-11-30" "2014-12-07" \
+ess task stream 125accesslogs "2014-11-09" "2014-12-07" \
 "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' \
 i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' \
 i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | \
