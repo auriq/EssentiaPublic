@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ess instance local
 for i in {1..7}; do funzip ./diy_woodworking/browse_2014090${i}.gz | wc -l ; done
 ess task stream browse 2014-09-01 2014-09-07 'wc -l'
 
@@ -10,7 +9,7 @@ ess task stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitl
 
 ess task stream purchase 2014-09-01 2014-09-30 \
     "aq_pp -f,+1,eok,qui - -d %cols \
-    -evlc is:t 'DateToTime(%date_col,\"%date_fmt\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
+    -eval is:t 'DateToTime(purchaseDate,\"Y.m.d.H.M.S\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
     -if -filt 't>0' \
       -evlc articleID 'articleID+1' \
     -endif \
