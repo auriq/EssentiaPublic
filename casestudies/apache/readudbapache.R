@@ -1,5 +1,5 @@
 file <- "queryapache.sh"            # store queryapache.sh as file
-rscriptfile <- "analyzeapache.R"    # store apache.R as rscriptfile
+rscriptfile <- "analyzeapache.R"    # store analyzeapache.R as rscriptfile
 library("RESS")                     # load Essentia's R Integration package
 
 read.udb(file)                      # call read.udb to execute the essentia statements written in queryapache.sh and save them to R dataframes command1 through command4

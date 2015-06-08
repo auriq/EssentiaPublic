@@ -1,4 +1,3 @@
-ess instance local
 ess spec drop database worstloss
 ess spec create database worstloss --ports=1
 
@@ -6,13 +5,10 @@ ess spec create table grouping s,pkey:country s,+key:user s,+first:time i,+last:
 
 ess udbd start
 
-ess datastore select .
+ess datastore select local
 
-ess datastore scan
+ess datastore category add casino "$HOME/*onlinecasino*" --dateformat none
 
-ess datastore rule add "*onlinecasino*" "casino" 
-
-ess datastore probe casino --apply
 ess datastore summary
 
 ess task stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user s:time i:bet f:winnings s:country -udb_imp worstloss:grouping" --debug
