@@ -1,12 +1,10 @@
 #!/bin/bash
 
 # this script categorizes the data used in the Essentia 'woodworking'
-# example.  Change the 'select' command to point to where you
+# example.  Change the 'category add' command to point to where you
 # stored the data
 
 ess datastore select local
-# OR if you want to try reading from an S3 bucket:
-# ess datastore select s3://asi-public --credentials=~/mycredentials.csv
 
 # Setup the 'browse' category
 ess datastore category add browse "$HOME/*tutorials/woodworking/diy_woodworking/*browse*"
