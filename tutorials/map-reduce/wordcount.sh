@@ -4,10 +4,10 @@
 # simple 'wordcount' example
 #
 # clean out old spec files if they exist
-ess spec reset
+ess server reset
 # create schema
-ess spec create database mapreduce
-ess spec create vector wordcount s,pkey:word i,+add:count
+ess create database mapreduce
+ess create vector wordcount s,pkey:word i,+add:count
 # restart UDB to clean out old data
 ess udbd restart
 # import data.  Split words by punctuation and space, then load into UDB
