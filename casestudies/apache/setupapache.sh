@@ -1,30 +1,30 @@
 ess udbd stop
-ess spec reset
+ess server reset
 
-ess spec create database logsapache1 --ports=1
+ess create database logsapache1 --ports=1
 # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used by day.
-ess spec create vector vector1 s,pkey:day i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+ess create vector vector1 s,pkey:day i,+add:pagecount i,+add:hitcount i,+add:pagebytes
 
-ess spec create database logsapache2 --ports=1
+ess create database logsapache2 --ports=1
 # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used by hour.
-ess spec create vector vector2 s,pkey:hour i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+ess create vector vector2 s,pkey:hour i,+add:pagecount i,+add:hitcount i,+add:pagebytes
 
-ess spec create database logsapache3 --ports=1
+ess create database logsapache3 --ports=1
 # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used over each month of data.
-ess spec create vector vector3 s,pkey:month i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+ess create vector vector3 s,pkey:month i,+add:pagecount i,+add:hitcount i,+add:pagebytes
 
-ess spec create database logsapache4 --ports=1
+ess create database logsapache4 --ports=1
 # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used by day of the week.
-ess spec create vector vector4 s,pkey:dayoftheweek i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+ess create vector vector4 s,pkey:dayoftheweek i,+add:pagecount i,+add:hitcount i,+add:pagebytes
 
 ess udbd start
 
-ess datastore select local
+ess select local
 # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. 
 # Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
-ess datastore category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
+ess category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
 
-ess datastore summary
+ess summary
 
 
 # Stream your access logs from the startdate and enddate you specify into the following command. Use logcnv to specify the format of the records in the access log and convert them to .csv format. 
@@ -34,7 +34,7 @@ ess datastore summary
 # Convert the time column to a date and extract the month ("December"...), day ("01"...), dayoftheweek ("Sun"...), and hour ("00" to "23") into their respective columns. 
 # Import the modified and reduced data into the four vectors in the databases you defined above so that the attributes defined there can be applied.    
         
-ess task stream 125accesslogs "2014-11-09" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
+ess stream 125accesslogs "2014-11-09" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
 | aq_pp -emod rt -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
 -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
 -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
