@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#test
 testnum=1
 logfile="query_tests"
 version=essV`(ess -v 2>&1 | grep Essentia | cut -d ' ' -f3)`
@@ -54,5 +54,4 @@ ess query "select count(distinct articleID) from purchase:2014-09-01:2014-09-10 
 report 0 "WHERE" 
 
 ess query 'select count(distinct referrerID) from purchase:*:* WHERE PatCmp(userID,"66")' 
-report 0 "WHERE" 
-
+report 0 "WHERE"
