@@ -25,7 +25,17 @@ ess category add aqlogs "$HOME/*/casestudies/aq/aqlogs/*.gz" --dateformat "*-d-Y
 
 ess summary
 
-ess stream aqlogs "2014-06-13" "2014-08-15" "aq_pp -emod rt -f,+1,eok - -d %cols -filt 'status == 200 || status == 304' -eval i:hitcount '1' \
+# Check Essentia Version Number for Compatibility
+EssVersion=`ess -v 2>&1 | aq_pp -f,eok,sep=':' - -d X s,trm:EssentiaVersion -filt '\$RowNum==1' \
+-filt 'EssentiaVersion!="3.0.9.12"' -notitle 2>/dev/null`
+if [ -z "$EssVersion" ]
+then
+        oldmod="-emod rt "
+else
+        oldmod=""
+fi
+
+ess stream aqlogs "2014-06-13" "2014-08-15" "aq_pp $oldmod -f,+1,eok - -d %cols -filt 'status == 200 || status == 304' -eval i:hitcount '1' \
 -if -filt '(PatCmp(page, \"*.html[?,#]?*\", \"ncas\") || PatCmp(page, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(page, \"*.php[?,#]?*\", \"ncas\") || PatCmp(page, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(page, \"*/\", \"ncas\") || PatCmp(page, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'page' \
 -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(t,\"%B\")' -eval s:day 'TimeToDate(t,\"%d\")' -eval s:dayoftheweek 'TimeToDate(t,\"%a\")' -eval s:hour 'TimeToDate(t,\"%H\")' \
 -ddef -udb -imp aqlogday:aqlogday -imp aqloghour:aqloghour -imp aqlogmonth:aqlogmonth -imp aqlogdayoftheweek:aqlogdayoftheweek" --debug
