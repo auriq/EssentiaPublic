@@ -26,6 +26,15 @@ ess category add 125accesslogs "$HOME/*accesslog*125-access_log*"
 
 ess summary
 
+# Check Essentia Version Number for Compatibility
+EssVersion=`ess -v 2>&1 | aq_pp -f,eok,sep=':' - -d X s,trm:EssentiaVersion -filt '\$RowNum==1' \
+-filt 'EssentiaVersion!="3.0.9.12"' -notitle 2>/dev/null`
+if [ -z "$EssVersion" ] 
+then
+        oldmod="-emod rt "
+else
+        oldmod=""
+fi
 
 # Stream your access logs from the startdate and enddate you specify into the following command. Use logcnv to specify the format of the records in the access log and convert them to .csv format. 
 # Then pipe the data into our preprocessor (aq_pp) and specify which columns you want to keep. Filter on httpstatus so that you only include the 'good' http status codes that correspond to actual views. 
@@ -35,7 +44,7 @@ ess summary
 # Import the modified and reduced data into the four vectors in the databases you defined above so that the attributes defined there can be applied.    
         
 ess stream 125accesslogs "2014-11-09" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
-| aq_pp -emod rt -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
+| aq_pp $oldmod -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
 -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
 -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
 -ddef -udb_imp logsapache1:vector1 -udb_imp logsapache2:vector2 -udb_imp logsapache3:vector3 -udb_imp logsapache4:vector4" --debug
