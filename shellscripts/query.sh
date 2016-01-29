@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#test
 testnum=1
 logfile="query_tests"
 version=essV`(ess -v 2>&1 | grep Essentia | cut -d ' ' -f3)`
