@@ -1,7 +1,8 @@
 ess udbd stop
+ess server reset
 
 ess drop database totalwinnings
-ess create database totalwinnings --ports=1
+ess create database totalwinnings
 
 ess create vector myvector s,pkey:user i,+max:bet f,+add:winnings
 
@@ -9,7 +10,7 @@ ess udbd start
 
 ess select local
 
-ess category add casino "$HOME/*onlinecasino*" --dateformat none
+ess category add casino "$HOME/*onlinecasino*" --dateregex none
 
 ess summary
 

@@ -21,7 +21,7 @@ ess udbd start
 
 ess select local
 
-ess category add aqlogs "$HOME/*/casestudies/aq/aqlogs/*.gz" --dateformat "*-d-YMD-*" 
+ess category add aqlogs "$HOME/*/casestudies/aq/aqlogs/*.gz" --dateregex ".*-d-[:%Y:][:%m:][:%d:]-.*" 
 
 ess summary
 
