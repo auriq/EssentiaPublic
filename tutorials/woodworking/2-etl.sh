@@ -5,7 +5,7 @@ ess stream browse 2014-09-01 2014-09-07 'wc -l'
 
 
 mkdir bz2
-ess stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > ./bz2/%file.bz2"
+ess stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -o,notitle - | bzip2 - -c > ./bz2/%file.bz2"
 
 ess stream purchase 2014-09-01 2014-09-30 \
     "aq_pp -f,+1,eok,qui - -d %cols \
@@ -13,8 +13,7 @@ ess stream purchase 2014-09-01 2014-09-30 \
     -if -filt 't>0' \
       -eval articleID 'articleID+1' \
     -endif \
-    -c purchaseDate userID articleID price refID \
-    -notitle \
+    -o,notitle - -c purchaseDate userID articleID price refID \
     | bzip2 - -c > ./bz2/%file.bz2"
 
 

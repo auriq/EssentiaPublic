@@ -27,7 +27,7 @@ ess summary
 
 # Check Essentia Version Number for Compatibility
 EssVersion=`ess -v 2>&1 | aq_pp -f,eok,sep=':' - -d X s,trm:EssentiaVersion -filt '\$RowNum==1' \
--filt 'EssentiaVersion!="3.0.9.12"' -notitle 2>/dev/null`
+-filt 'EssentiaVersion!="3.0.9.12"' -o,notitle - 2>/dev/null`
 if [ -z "$EssVersion" ]
 then
         oldmod="-emod rt "

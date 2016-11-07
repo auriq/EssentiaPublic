@@ -1,0 +1,8 @@
+aqlog.sh
+aqlogday.sh
+aqloghour.sh
+aqlogdayoftheweek.sh
+aqlogmonth.sh
+aqlog.R
+analyzeaqlog.R
+

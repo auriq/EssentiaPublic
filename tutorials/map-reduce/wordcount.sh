@@ -14,4 +14,4 @@ ess udbd restart
 cat pg98.txt | tr -s '[[:punct:][:space:]]' '\n' | \
                aq_pp -d s:word -eval i:count 1 -imp mapreduce:wordcount
 # output the top 10 words.
-aq_udb -exp mapreduce:wordcount -sort count -dec -top 10
+aq_udb -exp mapreduce:wordcount -sort,dec count -top 10

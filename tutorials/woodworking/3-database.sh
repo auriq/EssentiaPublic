@@ -24,13 +24,13 @@ ess stream purchase 2014-09-01 2014-09-30 \
 ess exec "aq_udb -exp wood:allsales"
 ess exec "aq_udb -ord wood:allsales"
 
-ess exec "aq_udb -exp wood:allsales -notitle | \
+ess exec "aq_udb -exp wood:allsales -o,notitle - | \
                aq_pp -f - -d s:userid X i:articleid f:total X -imp wood:usersales"
 
-ess exec "aq_udb -exp wood:usersales -sort total -dec -top 10"
+ess exec "aq_udb -exp wood:usersales -sort,dec total -top 10"
 
 ess exec "aq_udb -clr wood:usersales"
-ess exec "aq_udb -clr_all -db wood"
+ess exec "aq_udb -clr wood"
 
 
 

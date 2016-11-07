@@ -6,10 +6,12 @@
 
 ess select local
 
+currentdir=`pwd`
+
 # Setup the 'browse' category
-ess category add browse "$HOME/*tutorials/woodworking/diy_woodworking/*browse*"
+ess category add browse "$currentdir/diy_woodworking/*browse_*"
 ess category change columnspec browse "S:eventDate S:userID I:articleID"
 
 # Setup the 'purchase' category
-ess category add purchase "$HOME/*tutorials/woodworking/diy_woodworking/*purchase*"
+ess category add purchase "$currentdir/diy_woodworking/*purchase_*"
 ess category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
