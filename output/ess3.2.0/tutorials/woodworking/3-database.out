@@ -1,6 +1,6 @@
 ip-10-0-0-225: udbd-10010 stopped.
 ip-10-0-0-225: Starting udbd-10010.
-ip-10-0-0-225: udbd-10010 (16838) started.
+ip-10-0-0-225: udbd-10010 (19414) started.
 "userid","ptime","articleid","price","refid"
 "4084",1409529602,23,2.73,0
 "4084",1409575116,38,2.4100000000000001,47

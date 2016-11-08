@@ -14,7 +14,7 @@ ess category add casino "$HOME/*onlinecasino*" --dateregex none
 
 ess summary
 
-ess stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user s:time i:bet f:winnings s:country -udb_imp worstloss:grouping" --debug
+ess stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user s:time i:bet f:winnings s:country -udb -imp worstloss:grouping" --debug
 
 ess exec "aq_udb -db worstloss -ord grouping winnings" --debug
 ess exec "aq_udb -db worstloss -exp grouping -o worstloss.csv" --debug

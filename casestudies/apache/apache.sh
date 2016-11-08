@@ -16,7 +16,7 @@ ess stream 125accesslogs "2014-11-30" "2014-12-07" \
 X sep:'] \"' X sep:' ' X sep:' ' X sep:'\" ' X sep:' ' \
 X sep:' \"' s,clf:referrer \
 sep:'\" \"' X sep:'\"' X \
--eval i:pagecount \"1\" -ddef -udb_imp apache:vector1"
+-eval i:pagecount \"1\" -ddef -udb -imp apache:vector1"
 
 ess exec "aq_udb -exp apache:vector1 -sort pagecount -dec -top 25; \
 aq_udb -cnt apache:vector1"

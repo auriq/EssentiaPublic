@@ -8,15 +8,18 @@ ess create vector vector1 s,pkey:timeseg i,+add:pagecount i,+add:hitcount i,+add
 ess udbd start
 
 ess select local
-ess category add 125accesslogs "$HOME/*accesslog*125-access_log*"
+
+currentdir=`pwd`
+echo "My current directory: " $currentdir
+ess category add 125accesslogs "$currentdir/../../casestudies/apache/*accesslog*125-access_log*"
 
 ess summary
 
-ess stream 125accesslogs $1 ${2} "aq_pp $oldmod -f,qui,eok - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
+ess stream 125accesslogs $1 ${2} "aq_pp $oldmod -f,qui,eok,div - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
 s:time_s sep:'] \"' X sep:' ' s,clf:accessedfile sep:' ' X sep:'\" ' i:httpstatus sep:' ' i:pagebytes sep:' \"' X \
 sep:'\" \"' X sep:'\"' X -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' -filt '$5' -eval i:hitcount '1' \
 -if -filt '(PatCmp(accessedfile, \"$4\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
--else -eval pagecount '0' -endif -eval s:timeseg 'TimeToDate(time,\"${3}\")' -ddef -udb_imp logsapache1:vector1" --debug
+-else -eval pagecount '0' -endif -eval s:timeseg 'TimeToDate(time,\"${3}\")' -ddef -udb -imp logsapache1:vector1" --debug
 
 # Stream your access logs from the startdate and enddate you specify into the following command. Use logcnv to specify the format of the records in the access log and convert them to .csv format.
 # Then pipe the data into our preprocessor (aq_pp) and specify which columns you want to keep. Filter on httpstatus so that you only include the 'good' http status codes that correspond to actual views.

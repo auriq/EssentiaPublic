@@ -6,7 +6,7 @@ read_browse.sh
 read_purchase.sh
 myqueries.sh
 rtutorial.R
-my_setup_script.sh 2014-11-30 2014-12-07 %d "*.html[?,#]?*" "httpstatus == 200 || httpstatus == 304"
+'my_setup_script.sh 2014-11-30 2014-12-07 %d "*.html[?,#]?*" "httpstatus == 200 || httpstatus == 304"'
 readquery.sh
 capture_essentia_query.sh
 rtutorial2.R

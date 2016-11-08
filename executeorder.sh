@@ -14,6 +14,7 @@ fi
 
 cd $newpath
 currentpwd=`pwd`
+#echo $currentpwd
 outputpwd=`echo $currentpwd | sed "s/EssentiaPublic/EssentiaPublic\/output\/$branch/g"`
 if [[ -z `ls $outputpwd 2>/dev/null` ]]
 then
@@ -28,24 +29,27 @@ then
  for file in `cat $myfile`
  do
   outputfile=`echo $file | sed 's/\..*//g'`
+  modfile=`echo $file | tr -d "'"`
+  echo $file
+  echo $modfile
   if [[ -n `echo $file | grep -e \\.sh` ]]
   then
-   echo "bash $file"
-   bash $file >$outputpwd/$outputfile.out 2>failure.txt
+   echo "bash $modfile"
+   bash $modfile >$outputpwd/$outputfile.out 2>failure.txt
   elif [[ -n `echo $file | grep -e \\.R` ]]
   then
    if [[ "$file" != *"analyze"* ]]
    then
-    echo "R -f $file"
-    #R -f $file >$outputpwd/$outputfile.out 2>failure.txt
+    echo "R -f $modfile"
+    R -f $modfile >$outputpwd/$outputfile.out 2>failure.txt
    else
-    echo 'R -e "source(\"$lastfile\")" -e "source(\"$file\")"', $lastfile, $file
-    #R -e "source(\"$lastfile\")" -e "source(\"$file\")" >$outputpwd/$lastfile$outputfile.out 2>failure.txt
+    echo 'R -e "source(\"$lastfile\")" -e "source(\"$modfile\")"', $lastfile, $modfile
+    R -e "source(\"$lastfile\")" -e "source(\"$modfile\")" >$outputpwd/$lastfile$outputfile.out 2>failure.txt
    fi
   fi
  if [[ -n `grep errors failure.txt` ]]
  then
-  echo "At $currentpwd, file $file failed."
+  echo "At $currentpwd, file $file failed. Used $modfile"
   orderpid=`ps -ef | grep order.sh | grep -v grep | grep -v executeorder | awk '{printf $2}'`
   echo $orderpid
   kill $orderpid
