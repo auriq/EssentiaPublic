@@ -35,7 +35,7 @@ then
   if [[ -n `echo $file | grep -e \\.sh` ]]
   then
    echo "bash $modfile"
-   bash $modfile >$outputpwd/$outputfile.out 2>failure.txt
+   eval bash $modfile >$outputpwd/$outputfile.out 2>failure.txt
   elif [[ -n `echo $file | grep -e \\.R` ]]
   then
    if [[ "$file" != *"analyze"* ]]

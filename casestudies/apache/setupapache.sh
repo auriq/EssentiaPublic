@@ -43,7 +43,7 @@ fi
 # Convert the time column to a date and extract the month ("December"...), day ("01"...), dayoftheweek ("Sun"...), and hour ("00" to "23") into their respective columns. 
 # Import the modified and reduced data into the four vectors in the databases you defined above so that the attributes defined there can be applied.    
         
-ess stream 125accesslogs "2014-11-09" "2014-12-07" "aq_pp $oldmod -f,qui,eok - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
+ess stream 125accesslogs "2014-11-09" "2014-12-07" "aq_pp $oldmod -f,qui,eok,div - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
 s:time_s sep:'] \"' X sep:' ' s,clf:accessedfile sep:' ' X sep:'\" ' i:httpstatus sep:' ' i:pagebytes sep:' \"' X \
 sep:'\" \"' X sep:'\"' X -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' \
 -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \

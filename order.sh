@@ -1,3 +1,4 @@
+ess purge local
 bash rmtasklogs.sh
 
 if [[ -z `R --version 2>/dev/null` ]]

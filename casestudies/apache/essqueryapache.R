@@ -8,9 +8,9 @@ command1 <- essQuery("aq_udb -exp logsapache3:vector3", "--debug")
 
 # The next three statements export the day, day of the week, and hour vectors from their respective databases,
 # ordering the output by the number of pages seen (in descending order). We send the output of each command directly into R and then save it into an R dataframe.
-command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort pagecount -dec", "--debug")
-command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec", "--debug")
-command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec", "--debug")
+command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort,dec pagecount", "--debug")
+command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort,dec pagecount", "--debug")
+command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort,dec pagecount", "--debug")
 
 source(rscriptfile, echo=FALSE)     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created.
                                     # Turn echo to TRUE to make the output less results-oriented and easier to debug.

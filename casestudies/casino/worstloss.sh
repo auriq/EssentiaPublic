@@ -16,5 +16,5 @@ ess summary
 
 ess stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user s:time i:bet f:winnings s:country -udb -imp worstloss:grouping" --debug
 
-ess exec "aq_udb -db worstloss -ord grouping winnings" --debug
-ess exec "aq_udb -db worstloss -exp grouping -o worstloss.csv" --debug
+ess exec "aq_udb -ord worstloss:grouping winnings" --debug
+ess exec "aq_udb -exp worstloss:grouping -o worstloss.csv" --debug

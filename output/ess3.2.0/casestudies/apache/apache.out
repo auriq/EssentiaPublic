@@ -1,0 +1,32 @@
+ip-10-0-0-233: udbd-10010 stopped.
+ip-10-0-0-233: Starting udbd-10010.
+ip-10-0-0-233: udbd-10010 (1697) started.
+"referrer","pagecount"
+"-",141892
+"http://www.auriq.com/wp-admin/admin.php?page=WordfenceBlockedIPs",14101
+"http://www.auriq.com/",10052
+"http://www.auriq.com/analyzing-500m-log-records-using-spark-one-developers-experience/",1846
+"http://www.auriq.com/stream-zip-file/#comment-15597",1362
+"http://www.auriq.com/stream-zip-file/#comment-15634",1310
+"http://www.auriq.com/stream-zip-file/",1290
+"http://www.auriq.com/big-data-log-analysis-approaches-part-three/",1087
+"http://www.auriq.com/products/essentia/works/",591
+"http://www.auriq.com/fuzzy-matching-attribution/",434
+"http://www.auriq.com/cgi-bin/rt/licn",384
+"http://www.auriq.com/wp-content/themes/wps-theme/_/css/main.css?ver=3.7.1",303
+"http://www.auriq.com/products/essentia/",288
+"http://www.auriq.com/about/",277
+"http://www.auriq.com/step-step-guide-linear-attribution-model/",212
+"http://www.auriq.com/contact/",206
+"http://www.auriq.com/products/rtmetrics/",205
+"http://www.auriq.com/wp-content/plugins/elegantbuilder/style.css?ver=2.3",166
+"AURIQ.com/wp-login.php",165
+"http://www.auriq.com/big-data-log-analysis-approaches-part-one/",134
+"http://www.auriq.com/products/essentia/essentia/",101
+"http://www.auriq.com/blog/",97
+"http://www.auriq.com/products/rtbandwidth/",95
+"http://www.auriq.com/wp-content/plugins/ml-slider/assets/sliders/flexslider/flexslider.css?ver=3.0.1",91
+"http://www.auriq.com/essentia-benchmark-results/",89
+"field","count"
+"pkey",2596
+"row",2596
