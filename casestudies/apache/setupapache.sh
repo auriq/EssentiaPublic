@@ -22,7 +22,7 @@ ess udbd start
 ess select local
 # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. 
 # Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
-ess category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
+ess category add 125accesslogs "$HOME/EssentiaPublic/*accesslog*125-access_log*"    
 
 ess summary
 

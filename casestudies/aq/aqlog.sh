@@ -1,4 +1,7 @@
-ess udbd stop
+ess cluster set local
+ess purge local
+
+#ess udbd stop
 ess server reset
 
 ess create database aqlogday --ports=1
@@ -17,11 +20,12 @@ ess create database aqlogdayoftheweek --ports=1
 ess create vector aqlogdayoftheweek s,pkey:dayoftheweek i,+add:pagecount i,+add:hitcount 
 # Create a vector to aggregate (count) the number of pages and hits seen or used by day of the week.
 
-ess udbd start
+#ess udbd start
+ess udbd restart
 
 ess select local
 
-ess category add aqlogs "$HOME/*/casestudies/aq/aqlogs/*.gz" --dateregex ".*-d-[:%Y:][:%m:][:%d:]-.*" 
+ess category add aqlogs "$HOME/EssentiaPublic/*casestudies/aq/aqlogs/*.gz" --dateregex ".*-d-[:%Y:][:%m:][:%d:]-.*" 
 
 ess summary
 

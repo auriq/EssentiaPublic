@@ -1,3 +1,8 @@
+source ~/.bashrc
+alias ess='ESS_CACHE_DIR=$ESS_CACHE_DIR ess'
+#ESS_CACHE_DIR=$ESS_CACHE_DIR ess cluster set local
+#ESS_CACHE_DIR=$ESS_CACHE_DIR ess purge local
+ess cluster set local
 ess purge local
 bash rmtasklogs.sh
 
@@ -6,13 +11,18 @@ then
  echo "Run: sudo yum install R"
  exit
 fi
-: 'if [[ -z `R -q -e "library(RESS)" | grep no\ package` ]]
+if [[ -n `R -q -e "library(RESS)" 2>&1 | grep no\ package` ]]
 then
  echo ""
  echo "Run: sudo R"
  echo " then: install.packages(\"RESS\")"
  exit
-fi'
+fi
+if [[ -z `which bzip2 2>/dev/null` ]]
+then
+ echo "Run: sudo yum install bzip2"
+ exit
+fi
 
 echo $# #| sed 's/.* //' #| tr ' ' ','
 count=1

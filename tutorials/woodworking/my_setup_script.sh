@@ -1,3 +1,6 @@
+ess cluster set local
+ess purge local
+
 ess udbd stop
 ess server reset
 

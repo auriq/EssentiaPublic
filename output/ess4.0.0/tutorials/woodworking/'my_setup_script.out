@@ -1,0 +1,19 @@
+574a0af0b297: Stopping udbd-10010 (26663).
+574a0af0b297: udbd-10010 stopped.
+574a0af0b297: Starting udbd-10010.
+574a0af0b297: udbd-10010 (28382) started.
+My current directory:  /home/EssentiaPublic/tutorials/woodworking
+
+------------------------------------------------------------------------
+-------------------------------- local ---------------------------------
+------------------------------------------------------------------------
+
+============================= File summary =============================
+Name             Count  Size    first       last
+-------------  -------  ------  ----------  ----------
+125accesslogs        5  77.8M   2014-11-09  2014-12-07 
+
+========================================================================
+
+set -o pipefail; localget -f  '/home/EssentiaPublic/tutorials/woodworking/../../casestudies/apache/accesslogs/125-access_log-20141130' | aq_pp  -f,qui,eok,div - -d ip:ip sep:' ' X sep:' ' X sep:' [' s:time_s sep:'] "' X sep:' ' s,clf:accessedfile sep:' ' X sep:'" ' i:httpstatus sep:' ' i:pagebytes sep:' "' X sep:'" "' X sep:'"' X -eval i:time 'DateToTime(time_s, "d.b.Y.H.M.S.z")' -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' -if -filt '(PatCmp(accessedfile, "*.html[?,#]?*", "ncas") || PatCmp(accessedfile, "*.htm[?,#]?*", "ncas") || PatCmp(accessedfile, "*.php[?,#]?*", "ncas") || PatCmp(accessedfile, "*.asp[?,#]?*", "ncas") || PatCmp(accessedfile, "*/", "ncas") || PatCmp(accessedfile, "*.php", "ncas"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' -else -eval pagecount '0' -endif -eval s:timeseg 'TimeToDate(time,"%d")' -ddef -udb -imp logsapache1:vector1
+set -o pipefail; localget -f  '/home/EssentiaPublic/tutorials/woodworking/../../casestudies/apache/accesslogs/125-access_log-20141207' | aq_pp  -f,qui,eok,div - -d ip:ip sep:' ' X sep:' ' X sep:' [' s:time_s sep:'] "' X sep:' ' s,clf:accessedfile sep:' ' X sep:'" ' i:httpstatus sep:' ' i:pagebytes sep:' "' X sep:'" "' X sep:'"' X -eval i:time 'DateToTime(time_s, "d.b.Y.H.M.S.z")' -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' -if -filt '(PatCmp(accessedfile, "*.html[?,#]?*", "ncas") || PatCmp(accessedfile, "*.htm[?,#]?*", "ncas") || PatCmp(accessedfile, "*.php[?,#]?*", "ncas") || PatCmp(accessedfile, "*.asp[?,#]?*", "ncas") || PatCmp(accessedfile, "*/", "ncas") || PatCmp(accessedfile, "*.php", "ncas"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' -else -eval pagecount '0' -endif -eval s:timeseg 'TimeToDate(time,"%d")' -ddef -udb -imp logsapache1:vector1

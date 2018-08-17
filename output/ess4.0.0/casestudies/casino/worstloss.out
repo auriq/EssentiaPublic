@@ -1,0 +1,19 @@
+574a0af0b297: Stopping udbd-10010 (29046).
+574a0af0b297: udbd-10010 stopped.
+574a0af0b297: Starting udbd-10010.
+574a0af0b297: udbd-10010 (29362) started.
+
+------------------------------------------------------------------------
+-------------------------------- local ---------------------------------
+------------------------------------------------------------------------
+
+============================= File summary =============================
+Name      Count  Size    first       last
+------  -------  ------  ----------  ----------
+casino        1  1.1K    1970-01-01  1970-01-01 
+
+========================================================================
+
+set -o pipefail; localget -f  '/home/EssentiaPublic/casestudies/casino/onlinecasino.csv' | aq_pp -f,+1,eok - -d s:user s:time i:bet f:winnings s:country -udb -imp worstloss:grouping
+aq_udb -ord worstloss:grouping winnings
+aq_udb -exp worstloss:grouping -o worstloss.csv

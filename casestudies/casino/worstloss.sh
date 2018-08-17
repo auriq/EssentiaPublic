@@ -1,3 +1,5 @@
+ess cluster set local
+
 ess udbd stop
 ess server reset
 
@@ -10,7 +12,7 @@ ess udbd start
 
 ess select local
 
-ess category add casino "$HOME/*onlinecasino*" --dateregex none
+ess category add casino "$HOME/EssentiaPublic/*onlinecasino*" --dateregex none
 
 ess summary
 

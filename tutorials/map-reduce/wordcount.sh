@@ -3,6 +3,8 @@
 # Demo use of Essentia in 'mapreduce' mode.  Replicates
 # simple 'wordcount' example
 #
+# Tell Essentia to run only on local machine
+ess cluster set local
 # clean out old spec files if they exist
 ess server reset
 # create schema

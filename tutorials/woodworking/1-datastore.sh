@@ -4,6 +4,9 @@
 # example.  Change the 'category add' command to point to where you
 # stored the data
 
+ess cluster set local
+ess purge local
+
 ess select local
 
 currentdir=`pwd`
